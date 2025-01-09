@@ -140,21 +140,25 @@
     </div>
 
     <!-- Manage Authors Section -->
+    <!-- Manage Authors Section -->
     <div class="content">
         <h4>Manage Authors</h4>
         <p>Here you can manage authors, view details, add new authors, and update existing author information.</p>
         <div class="row">
             <div class="col-md-4">
-                <button class="btn btn-primary btn-block">Add New Author</button>
+                <a href="/authors/new" class="btn btn-primary btn-block">Add New Author</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-warning btn-block">Update Author</button>
+                <!-- For update, you would ideally populate the {id} dynamically -->
+                <a href="/authors/edit/1" class="btn btn-warning btn-block">Update Author</a>
             </div>
             <div class="col-md-4">
-                <button class="btn btn-danger btn-block">Delete Author</button>
+                <!-- For delete, you would ideally populate the {id} dynamically -->
+                <a href="/authors/delete/1" class="btn btn-danger btn-block">Delete Author</a>
             </div>
         </div>
     </div>
+
 
     <!-- Manage Categories Section -->
     <div class="content">
