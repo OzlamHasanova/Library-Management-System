@@ -1,9 +1,193 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Library Management System</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        body, html {
+            height: 100%;
+        }
+        .navbar {
+            background-color: #007bff;
+        }
+        .navbar a {
+            color: white;
+            font-weight: bold;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            color: white;
+            padding-top: 20px;
+            position: fixed;
+            width: 240px;
+            top: 0;
+            left: 0;
+        }
+        .sidebar a {
+            color: white;
+            font-weight: bold;
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #007bff;
+        }
+        .container {
+            margin-left: 240px;
+            min-height: calc(100vh - 60px); /* Ensure container takes full height */
+            padding-top: 20px;
+        }
+        .dashboard-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .card {
+            width: 23%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .card h3 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 18px;
+        }
+        .content {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #343a40;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to Admin Dashboard</h1>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="#">Library Admin</a>
+    <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link" href="#">Logout</a>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h4 class="text-center text-white">Admin Dashboard</h4>
+    <a href="#">Books</a>
+    <a href="#">Authors</a>
+    <a href="#">Categories</a>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Dashboard Cards -->
+    <div class="dashboard-cards">
+        <div class="card">
+            <h3>150</h3>
+            <p>Books Available</p>
+        </div>
+        <div class="card">
+            <h3>45</h3>
+            <p>Orders in Progress</p>
+        </div>
+        <div class="card">
+            <h3>30</h3>
+            <p>Authors</p>
+        </div>
+        <div class="card">
+            <h3>25</h3>
+            <p>Categories</p>
+        </div>
+    </div>
+
+    <!-- Manage Books Section -->
+    <div class="content">
+        <h4>Manage Books</h4>
+        <p>Here you can manage books, view details, update stock, and add new books.</p>
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary btn-block">Add New Book</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-warning btn-block">Update Book</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-danger btn-block">Delete Book</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Authors Section -->
+    <div class="content">
+        <h4>Manage Authors</h4>
+        <p>Here you can manage authors, view details, add new authors, and update existing author information.</p>
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary btn-block">Add New Author</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-warning btn-block">Update Author</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-danger btn-block">Delete Author</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Categories Section -->
+    <div class="content">
+        <h4>Manage Categories</h4>
+        <p>Here you can manage categories, view details, add new categories, and update existing categories.</p>
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary btn-block">Add New Category</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-warning btn-block">Update Category</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-danger btn-block">Delete Category</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>&copy; 2025 Library Management System. All Rights Reserved.</p>
+</div>
+
+<!-- jQuery (full version) -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<!-- Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
