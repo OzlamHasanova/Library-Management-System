@@ -19,7 +19,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute("userDto") UserDTO userDto) {
-        // Spring Security avtomatik olaraq yoxlayır.
         return "redirect:/admin";
     }
 

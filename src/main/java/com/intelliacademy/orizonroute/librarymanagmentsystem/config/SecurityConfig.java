@@ -13,19 +13,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .requestMatchers("/admin/**").hasRole("ADMIN") // admin dashboard-a yalnız admin roluna malik olanlar girə bilər
-                .anyRequest().permitAll() // qalan bütün requestlər icazəli olsun
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/login") // login səhifəsi
-                .defaultSuccessUrl("/admin", true) // uğurlu login sonrası yönləndiriləcək səhifə
-                .failureUrl("/login?error=true") // uğursuz login sonrası yönləndiriləcək səhifə
-                .permitAll() // bütün istifadəçilərə icazə ver
+                .loginPage("/login")
+                .defaultSuccessUrl("/admin", true)
+                .failureUrl("/login?error=true")
+                .permitAll()
                 .and()
                 .logout()
-                .logoutUrl("/logout") // logout URL
-                .logoutSuccessUrl("/login?logout=true") // uğurlu logout sonrası yönləndiriləcək səhifə
-                .permitAll(); // logout-u da hamıya açıq et
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .permitAll();
 
         return http.build();
     }
