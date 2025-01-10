@@ -113,9 +113,11 @@
             <p>Orders in Progress</p>
         </div>
         <div class="card">
-            <h3>30</h3>
+            <h3 th:text="${authorCount}">0</h3>
             <p>Authors</p>
+            <a href="/authors" class="btn btn-info btn-block">View Authors</a>
         </div>
+
         <div class="card">
             <h3>25</h3>
             <p>Categories</p>
@@ -139,7 +141,6 @@
         </div>
     </div>
 
-    <!-- Manage Authors Section -->
     <!-- Manage Authors Section -->
     <div class="content">
         <h4>Manage Authors</h4>

@@ -21,6 +21,10 @@ public class AuthorService {
     public Optional<Author> getAuthorById(Long id) {
         return authorRepository.findById(id);
     }
+    public long getAuthorCount() {
+        System.out.println(authorRepository.count());
+        return authorRepository.count();
+    }
 
     public Author saveAuthor(Author author) {
         return authorRepository.save(author);

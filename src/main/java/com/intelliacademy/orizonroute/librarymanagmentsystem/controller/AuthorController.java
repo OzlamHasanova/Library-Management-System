@@ -21,7 +21,6 @@ public class AuthorController {
         model.addAttribute("authors", authorService.getAllAuthors());
         return "author/list";
     }
-
     @GetMapping("/new")
     public String createAuthorForm(Model model) {
         model.addAttribute("author", new Author());
@@ -31,7 +30,7 @@ public class AuthorController {
     @PostMapping("/new")
     public String saveAuthor(@ModelAttribute("author") Author author) {
         authorService.saveAuthor(author);
-        return "redirect:/list";
+        return "redirect:/authors";
     }
 
     @GetMapping("/edit/{id}")
@@ -47,16 +46,14 @@ public class AuthorController {
 
     @PostMapping("/edit/{id}")
     public String updateAuthor(@PathVariable Long id, @ModelAttribute("author") Author author) {
-        author.setId(id); // Ensure the correct ID is set for update
+        author.setId(id);
         authorService.saveAuthor(author);
-        return "redirect:author/list";
+        return "redirect:/authors";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteAuthor(@PathVariable Long id) {
         authorService.deleteAuthor(id);
-        return "redirect:author/list";
+        return "redirect:/authors";
     }
-
-
 }
