@@ -2,6 +2,7 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.service;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.AuthorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorService {
 
-    @Autowired
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
 
     public List<Author> getAllAuthors() {
         return authorRepository.findAll();

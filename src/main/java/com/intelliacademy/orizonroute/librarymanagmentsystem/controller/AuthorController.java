@@ -2,6 +2,7 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +12,10 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("authors")
+@RequiredArgsConstructor
 public class AuthorController {
 
-    @Autowired
-    private AuthorService authorService;
+    private final AuthorService authorService;
 
     @GetMapping
     public String listAuthors(Model model) {
