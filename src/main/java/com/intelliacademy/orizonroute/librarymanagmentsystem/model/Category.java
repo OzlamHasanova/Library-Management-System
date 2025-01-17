@@ -1,27 +1,28 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.model;
 
-
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
 @Table
+@Entity
 @Getter
 @Setter
-public class Author {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String fullName;
-    private LocalDate birthDate;
-    private LocalDate deathDate;
-    private String biography;
 
-    @ManyToMany(mappedBy = "authors")
+    private String name;
+
+    @ManyToMany(mappedBy = "categories")
     private Set<Book> books = new HashSet<>();
 }
