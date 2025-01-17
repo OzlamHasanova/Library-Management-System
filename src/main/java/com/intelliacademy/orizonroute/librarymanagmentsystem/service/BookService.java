@@ -29,6 +29,7 @@ public class BookService {
     public BookDTO updateBook(Long id, BookDTO bookDTO) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + id));
+        book.setId(bookDTO.getId());
         book.setTitle(bookDTO.getTitle());
         book.setIsbn(bookDTO.getIsbn());
         book.setPublicationYear(bookDTO.getPublicationYear());
@@ -54,6 +55,7 @@ public class BookService {
     // Helper methods
     private BookDTO convertToDTO(Book book) {
         BookDTO bookDTO = new BookDTO();
+        bookDTO.setId(book.getId());
         bookDTO.setTitle(book.getTitle());
         bookDTO.setIsbn(book.getIsbn());
         bookDTO.setPublicationYear(book.getPublicationYear());

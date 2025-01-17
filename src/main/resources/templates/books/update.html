@@ -8,22 +8,22 @@
 <body>
 <div class="container mt-5">
     <h2>Update Book</h2>
-    <form th:action="@{'/books/' + ${book.id}}" method="post">
+        <form th:action="@{/books/edit/{id}(id=${book.id})}" th:object="${book}" method="post">
         <div class="form-group">
             <label>Title</label>
-            <input type="text" class="form-control" name="title" th:value="${book.title}" required>
+            <input type="text" class="form-control"  th:field="*{title}" required>
         </div>
         <div class="form-group">
             <label>ISBN</label>
-            <input type="text" class="form-control" name="isbn" th:value="${book.isbn}" required>
+            <input type="text" class="form-control" th:field="*{isbn}" required>
         </div>
         <div class="form-group">
-            <label>Publication Year</label>
-            <input type="number" class="form-control" name="publicationYear" th:value="${book.publicationYear}" required>
+            <label for="publicationYear">Publication Year</label>
+            <input type="number" class="form-control" id="publicationYear" th:field="*{publicationYear}" required>
         </div>
         <div class="form-group">
-            <label>Description</label>
-            <textarea class="form-control" name="description" rows="3" th:text="${book.description}"></textarea>
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
         </div>
         <button type="submit" class="btn btn-warning">Update</button>
     </form>

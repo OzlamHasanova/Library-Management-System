@@ -48,10 +48,11 @@ public class BookController {
         }
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("edit/{id}")
     public String showUpdateBookForm(@PathVariable Long id, Model model) {
         try {
             BookDTO book = bookService.getBookById(id);
+            model.addAttribute("id");
             model.addAttribute("book", book);
             return "books/update";
         } catch (BookNotFoundException e) {
@@ -59,7 +60,7 @@ public class BookController {
         }
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("edit/{id}")
     public String updateBook(@PathVariable Long id, @ModelAttribute("book") BookDTO bookDTO) {
         try {
             bookService.updateBook(id, bookDTO);
