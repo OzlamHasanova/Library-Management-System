@@ -16,8 +16,8 @@ public class BookService {
     private final BookRepository bookRepository;
 
 
-    public List<BookDTO> getAllBooks() {
-        return bookRepository.findAll().stream().map(this::convertToDTO).toList();
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
     }
 
     public BookDTO createBook(BookDTO bookDTO) {

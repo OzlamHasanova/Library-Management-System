@@ -2,6 +2,7 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.BookNotFoundException;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,7 @@ public class BookController {
 
     @GetMapping
     public String listBooks(Model model) {
-        List<BookDTO> books = bookService.getAllBooks();
+        List<Book> books = bookService.getAllBooks();
         model.addAttribute("books", books);
         return "books/list";
     }
@@ -30,7 +31,7 @@ public class BookController {
         return "books/create";
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public String createBook(@ModelAttribute("book") BookDTO bookDTO) {
         bookService.createBook(bookDTO);
         return "redirect:/books";
