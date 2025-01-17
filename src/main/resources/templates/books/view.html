@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Details</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Book Details</h2>
+    <div>
+        <strong>Title:</strong> <span th:text="${book.title}"></span><br>
+        <strong>ISBN:</strong> <span th:text="${book.isbn}"></span><br>
+        <strong>Publication Year:</strong> <span th:text="${book.publicationYear}"></span><br>
+        <strong>Description:</strong> <span th:text="${book.description}"></span><br>
+        <strong>Stock:</strong> <span th:text="${book.stock}"></span><br>
+    </div>
+    <a href="/books" class="btn btn-secondary mt-3">Back to List</a>
+</div>
+</body>
+</html>

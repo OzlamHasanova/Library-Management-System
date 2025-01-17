@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Book</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Update Book</h2>
+    <form th:action="@{'/books/' + ${book.id}}" method="post">
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control" name="title" th:value="${book.title}" required>
+        </div>
+        <div class="form-group">
+            <label>ISBN</label>
+            <input type="text" class="form-control" name="isbn" th:value="${book.isbn}" required>
+        </div>
+        <div class="form-group">
+            <label>Publication Year</label>
+            <input type="number" class="form-control" name="publicationYear" th:value="${book.publicationYear}" required>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" name="description" rows="3" th:text="${book.description}"></textarea>
+        </div>
+        <button type="submit" class="btn btn-warning">Update</button>
+    </form>
+</div>
+</body>
+</html>
