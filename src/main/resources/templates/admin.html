@@ -98,6 +98,8 @@
     <a href="#">Books</a>
     <a href="#">Authors</a>
     <a href="#">Categories</a>
+    <a href="#">Students</a> <!-- Yeni: Student bölməsi -->
+    <a href="#">Orders</a>   <!-- Yeni: Order bölməsi -->
 </div>
 
 <!-- Main Content -->
@@ -133,11 +135,9 @@
                 <a href="/books/new" class="btn btn-primary btn-block">Add New Book</a>
             </div>
             <div class="col-md-4">
-                <!-- Update Book link should have the ID of the book to update, here is an example with ID 1 -->
                 <a href="/books/1/edit" class="btn btn-warning btn-block">Update Book</a>
             </div>
             <div class="col-md-4">
-                <!-- Delete Book link should also have the ID of the book, here is an example with ID 1 -->
                 <form action="/books/1/delete" method="post" onsubmit="return confirm('Are you sure you want to delete this book?');">
                     <button type="submit" class="btn btn-danger btn-block">Delete Book</button>
                 </form>
@@ -145,47 +145,39 @@
         </div>
     </div>
 
-
-    <!-- Manage Authors Section -->
+    <!-- Manage Students Section -->
     <div class="content">
-        <h4>Manage Authors</h4>
-        <p>Here you can manage authors, view details, add new authors, and update existing author information.</p>
+        <h4>Manage Students</h4>
+        <p>Here you can manage students, view details, add new students, and update existing student information.</p>
         <div class="row">
             <div class="col-md-4">
-                <a href="/authors/new" class="btn btn-primary btn-block">Add New Author</a>
+                <a href="/students/new" class="btn btn-primary btn-block">Add New Student</a>
             </div>
             <div class="col-md-4">
-                <!-- For update, you would ideally populate the {id} dynamically -->
-                <a href="/authors/edit/1" class="btn btn-warning btn-block">Update Author</a>
+                <a href="/students/edit/1" class="btn btn-warning btn-block">Update Student</a>
             </div>
             <div class="col-md-4">
-                <!-- For delete, you would ideally populate the {id} dynamically -->
-                <a href="/authors/delete/1" class="btn btn-danger btn-block">Delete Author</a>
+                <a href="/students/delete/1" class="btn btn-danger btn-block">Delete Student</a>
             </div>
         </div>
     </div>
 
-
-    <!-- Manage Categories Section -->
+    <!-- Manage Orders Section -->
     <div class="content">
-        <h4>Manage Categories</h4>
-        <p>Here you can manage categories, view details, add new categories, and update existing categories.</p>
+        <h4>Manage Orders</h4>
+        <p>Here you can manage orders, view details, add new orders, and update existing orders.</p>
         <div class="row">
-            <!-- Add New Category -->
             <div class="col-md-4">
-                <a href="/categories/new" class="btn btn-primary btn-block">Add New Category</a>
+                <a href="/orders/new" class="btn btn-primary btn-block">Add New Order</a>
             </div>
-            <!-- Update Category (List of Categories with Edit Options) -->
             <div class="col-md-4">
-                <a href="/categories" class="btn btn-warning btn-block">Update Category</a>
+                <a href="/orders/edit/1" class="btn btn-warning btn-block">Update Order</a>
             </div>
-            <!-- Delete Category (List of Categories with Delete Options) -->
             <div class="col-md-4">
-                <a href="/categories" class="btn btn-danger btn-block">Delete Category</a>
+                <a href="/orders/delete/1" class="btn btn-danger btn-block">Delete Order</a>
             </div>
         </div>
     </div>
-
 
 </div>
 
@@ -195,9 +187,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>

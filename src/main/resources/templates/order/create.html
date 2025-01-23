@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Order</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="mb-4">Create New Order</h1>
+
+    <form th:action="@{/orders/create}" th:object="${order}" method="post">
+        <div class="form-group">
+            <label for="studentSif">Student SIF:</label>
+            <input type="text" id="studentSif" th:field="*{studentSif}" class="form-control" placeholder="Enter Student SIF" required />
+        </div>
+
+        <div class="form-group">
+            <label for="bookId">Book ID:</label>
+            <input type="number" id="bookId" th:field="*{bookId}" class="form-control" placeholder="Enter Book ID" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">Create Order</button>
+    </form>
+
+    <div th:if="${error}" class="alert alert-danger mt-3">
+        <p th:text="${error}"></p>
+    </div>
+
+    <a href="/admin/orders" class="btn btn-secondary mt-3">Back to Order List</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

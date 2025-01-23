@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="mb-4">Order List</h1>
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Order ID</th>
+            <th>Student SIF</th>
+            <th>Book ID</th>
+            <th>Order Timestamp</th>
+            <th>Return Timestamp</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.studentSif}"></td>
+            <td th:text="${order.bookId}"></td>
+            <td th:text="${order.orderTimestamp}"></td>
+            <td th:text="${order.returnTimestamp}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <a href="/admin/orders/create" class="btn btn-primary">Create New Order</a>
+        <a href="/admin/orders/return" class="btn btn-secondary">Return an Order</a>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
