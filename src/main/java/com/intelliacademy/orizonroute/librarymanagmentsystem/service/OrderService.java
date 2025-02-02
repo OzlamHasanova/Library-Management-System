@@ -22,7 +22,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final BookRepository bookRepository;
     private final StudentRepository studentRepository;
-    private OrderMapper orderMapper;
+    private final OrderMapper orderMapper;
 
     public List<OrderDTO> getAllOrders() {
         return orderRepository.findAll().stream()

@@ -26,6 +26,13 @@ public class BookService {
         return convertToDTO(savedBook);
     }
 
+    public List<BookDTO> getBooksByCategory(Long categoryId) {
+        List<Book> books = bookRepository.findByCategories_Id(categoryId);
+        return books.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
     public BookDTO updateBook(Long id, BookDTO bookDTO) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + id));

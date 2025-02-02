@@ -30,8 +30,9 @@
     </table>
 
     <div class="mt-4">
-        <a href="/admin/orders/create" class="btn btn-primary">Create New Order</a>
-        <a href="/admin/orders/return" class="btn btn-secondary">Return an Order</a>
+        <!-- 'th:href' istifadə olunub -->
+        <a th:href="@{/orders/create}" class="btn btn-primary">Create New Order</a>
+        <a th:href="@{/orders/return}" class="btn btn-secondary">Return an Order</a>
     </div>
 </div>
 

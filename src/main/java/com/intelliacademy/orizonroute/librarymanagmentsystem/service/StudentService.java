@@ -44,8 +44,8 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-    public StudentDTO findStudentBySif(String sif) {
-        return studentRepository.findBySif(sif).map(studentMapper::toDTO).get();//todo
+    public StudentDTO findStudentById(Long id) {
+        return studentRepository.findById(id).map(studentMapper::toDTO).get();
     }
 }
 
