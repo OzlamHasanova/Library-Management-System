@@ -4,6 +4,7 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.BookNotFoundException;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.BookRepository;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.BookMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,43 +15,37 @@ import java.util.List;
 public class BookService {
 
     private final BookRepository bookRepository;
-
+    private final BookMapper bookMapper;
 
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
     public BookDTO createBook(BookDTO bookDTO) {
-        Book book = convertToEntity(bookDTO);
+        Book book = bookMapper.toBook(bookDTO);
         Book savedBook = bookRepository.save(book);
-        return convertToDTO(savedBook);
+        return bookMapper.toBookDTO(savedBook);
     }
 
     public List<BookDTO> getBooksByCategory(Long categoryId) {
         List<Book> books = bookRepository.findByCategories_Id(categoryId);
         return books.stream()
-                .map(this::convertToDTO)
+                .map(bookMapper::toBookDTO)
                 .toList();
     }
 
     public BookDTO updateBook(Long id, BookDTO bookDTO) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + id));
-        book.setId(bookDTO.getId());
-        book.setTitle(bookDTO.getTitle());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setPublicationYear(bookDTO.getPublicationYear());
-        book.setDescription(bookDTO.getDescription());
-        book.setImage(bookDTO.getImage());
-        book.setStock(bookDTO.getStock());
+        bookMapper.updateBookFromDTO(bookDTO, book);
         Book updatedBook = bookRepository.save(book);
-        return convertToDTO(updatedBook);
+        return bookMapper.toBookDTO(updatedBook);
     }
 
     public BookDTO getBookById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + id));
-        return convertToDTO(book);
+        return bookMapper.toBookDTO(book);
     }
 
     public void deleteBook(Long id) {
@@ -58,29 +53,4 @@ public class BookService {
                 .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + id));
         bookRepository.delete(book);
     }
-
-    // Helper methods
-    private BookDTO convertToDTO(Book book) {
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setId(book.getId());
-        bookDTO.setTitle(book.getTitle());
-        bookDTO.setIsbn(book.getIsbn());
-        bookDTO.setPublicationYear(book.getPublicationYear());
-        bookDTO.setDescription(book.getDescription());
-        bookDTO.setImage(book.getImage());
-        bookDTO.setStock(book.getStock());
-        return bookDTO;
-    }
-
-    private Book convertToEntity(BookDTO bookDTO) {
-        Book book = new Book();
-        book.setTitle(bookDTO.getTitle());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setPublicationYear(bookDTO.getPublicationYear());
-        book.setDescription(bookDTO.getDescription());
-        book.setImage(bookDTO.getImage());
-        book.setStock(bookDTO.getStock());
-        return book;
-    }
 }
-

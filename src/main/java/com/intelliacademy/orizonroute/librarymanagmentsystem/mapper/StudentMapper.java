@@ -2,27 +2,12 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.mapper;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.StudentDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Student;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-public class StudentMapper {
+@Mapper(componentModel = "spring")
+public interface StudentMapper {
 
-    public StudentDTO toDTO(Student student) {
-        StudentDTO dto = new StudentDTO();
-        dto.setId(student.getId());
-        dto.setName(student.getName());
-        dto.setSurname(student.getSurname());
-        dto.setSif(student.getSif());
-        return dto;
-    }
+    StudentDTO toDTO(Student student);
 
-    public Student toEntity(StudentDTO dto) {
-        Student student = new Student();
-        student.setId(dto.getId());
-        student.setName(dto.getName());
-        student.setSurname(dto.getSurname());
-        student.setSif(dto.getSif());
-        return student;
-    }
+    Student toEntity(StudentDTO dto);
 }
-

@@ -3,13 +3,15 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.mapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.AuthorDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
+import java.util.List;
+
+@Mapper(componentModel = "spring")
 public interface AuthorMapper {
-    AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
 
-    AuthorDTO authorToAuthorDTO(Author author);
+    AuthorDTO toAuthorDTO(Author author);
 
-    Author authorDTOToAuthor(AuthorDTO authorDTO);
+    Author toAuthor(AuthorDTO authorDTO);
+
+    List<AuthorDTO> toAuthorDTOList(List<Author> authors);
 }

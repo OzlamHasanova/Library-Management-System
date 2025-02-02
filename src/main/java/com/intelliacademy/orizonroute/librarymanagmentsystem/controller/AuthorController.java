@@ -1,5 +1,6 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
+import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.AuthorDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +30,14 @@ public class AuthorController {
     }
 
     @PostMapping("/new")
-    public String saveAuthor(@ModelAttribute("author") Author author) {
+    public String saveAuthor(@ModelAttribute("author") AuthorDTO author) {
         authorService.saveAuthor(author);
         return "redirect:/authors";
     }
 
     @GetMapping("/edit/{id}")
     public String editAuthorForm(@PathVariable Long id, Model model) {
-        Optional<Author> author = authorService.getAuthorById(id);
+        Optional<AuthorDTO> author = authorService.getAuthorById(id);
         if (author.isPresent()) {
             model.addAttribute("author", author.get());
             return "author/edit";
@@ -46,7 +47,7 @@ public class AuthorController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateAuthor(@PathVariable Long id, @ModelAttribute("author") Author author) {
+    public String updateAuthor(@PathVariable Long id, @ModelAttribute("author") AuthorDTO author) {
         author.setId(id);
         authorService.saveAuthor(author);
         return "redirect:/authors";

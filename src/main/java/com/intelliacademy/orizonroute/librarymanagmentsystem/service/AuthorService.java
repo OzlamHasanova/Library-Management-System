@@ -1,9 +1,10 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.service;
 
+import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.AuthorDTO;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.AuthorMapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,21 +15,27 @@ import java.util.Optional;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final AuthorMapper authorMapper;
 
-    public List<Author> getAllAuthors() {
-        return authorRepository.findAll();
+    public List<AuthorDTO> getAllAuthors() {
+        List<Author> authors = authorRepository.findAll();
+        return authorMapper.toAuthorDTOList(authors);
     }
 
-    public Optional<Author> getAuthorById(Long id) {
-        return authorRepository.findById(id);
+    public Optional<AuthorDTO> getAuthorById(Long id) {
+        System.out.println(id);
+        Optional<Author> author = authorRepository.findById(id);
+        return author.map(authorMapper::toAuthorDTO);
     }
+
     public long getAuthorCount() {
-        System.out.println(authorRepository.count());
         return authorRepository.count();
     }
 
-    public Author saveAuthor(Author author) {
-        return authorRepository.save(author);
+    public AuthorDTO saveAuthor(AuthorDTO authorDTO) {
+        Author author = authorMapper.toAuthor(authorDTO);
+        Author savedAuthor = authorRepository.save(author);
+        return authorMapper.toAuthorDTO(savedAuthor);
     }
 
     public void deleteAuthor(Long id) {
