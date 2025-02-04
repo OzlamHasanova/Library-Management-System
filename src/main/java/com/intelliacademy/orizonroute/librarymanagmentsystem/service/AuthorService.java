@@ -1,6 +1,7 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.service;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.AuthorDTO;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.UserDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.AuthorMapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.AuthorRepository;

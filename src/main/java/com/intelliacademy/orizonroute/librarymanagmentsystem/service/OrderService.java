@@ -22,7 +22,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final BookRepository bookRepository;
     private final StudentRepository studentRepository;
-    private OrderMapper orderMapper;
+    private final OrderMapper orderMapper;
 
     public List<OrderDTO> getAllOrders() {
         return orderRepository.findAll().stream()
@@ -48,7 +48,7 @@ public class OrderService {
         orderDTO.setBookId(bookId);
         orderDTO.setOrderTimestamp(LocalDateTime.now());
 
-        Order order = orderMapper.toEntity(orderDTO, student, book);
+        Order order = orderMapper.toEntity(orderDTO);
         Order savedOrder = orderRepository.save(order);
 
         return orderMapper.toDTO(savedOrder);
