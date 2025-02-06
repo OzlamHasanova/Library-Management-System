@@ -48,13 +48,12 @@ public class Book {
     private Set<Author> authors = new HashSet<>();
 
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "book_category",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
+    @ManyToOne
+    @JoinColumn(
+            name = "category_id",
+           nullable = false
     )
-    private Set<Category> categories = new HashSet<>();
+    private Category category;
 
 }
 

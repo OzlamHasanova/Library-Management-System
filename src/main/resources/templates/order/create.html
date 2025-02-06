@@ -2,34 +2,137 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create Order</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #242440;
+            --secondary-color: #4F5D75;
+            --accent-color: #8B4513;
+            --success-color: #275232;
+            --danger-color: #9c2626;
+            --form-bg: rgba(36, 36, 64, 0.98);
+        }
+
+        body {
+            background: var(--primary-color);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: var(--form-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-light);
+            transition: 0.3s ease-in-out;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(139, 69, 19, 0.5);
+        }
+
+        .btn-custom {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-success-custom {
+            background: var(--success-color);
+            color: var(--text-light);
+            border: none;
+        }
+
+        .btn-success-custom:hover {
+            background: #1f4324;
+        }
+
+        .btn-cancel {
+            background: var(--danger-color);
+            color: var(--text-light);
+            border: none;
+        }
+
+        .btn-cancel:hover {
+            background: #7b1e1e;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container mt-4">
-    <h1 class="mb-4">Create New Order</h1>
 
-    <form th:action="@{/orders/create}" th:object="${order}" method="post">
-        <div class="form-group">
-            <label for="studentSif">Student SIF:</label>
-            <input type="text" id="studentSif" th:field="*{studentSif}" class="form-control" placeholder="Enter Student SIF" required />
-        </div>
+<div class="container">
+    <div class="form-container">
+        <h2 class="form-title">Create New Order</h2>
 
-        <div class="form-group">
-            <label for="bookId">Book ID:</label>
-            <input type="number" id="bookId" th:field="*{bookId}" class="form-control" placeholder="Enter Book ID" required />
-        </div>
+        <form th:action="@{/orders/create}" th:object="${order}" method="post">
 
-        <button type="submit" class="btn btn-success">Create Order</button>
-    </form>
+            <div class="mb-3">
+                <label for="studentSif" class="form-label">Select Student</label>
+                <select class="form-control" id="studentSif" th:field="*{studentSif}" required>
+                    <option th:each="student : ${students}"
+                            th:value="${student.sif}"
+                            th:text="${student.fullName != null ? student.fullName : 'Unknown'}"></option>
 
-    <div th:if="${error}" class="alert alert-danger mt-3">
-        <p th:text="${error}"></p>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="bookId" class="form-label">Select Book</label>
+                <select class="form-control" id="bookId" th:field="*{bookId}" required>
+                    <option th:each="book : ${books}"
+                            th:value="${book.id}"
+                            th:text="${book.title}"></option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="dueDate" class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="dueDate" th:field="*{dueDate}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="notes" class="form-label">Notes</label>
+                <textarea class="form-control" id="notes" th:field="*{notes}" rows="3"></textarea>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-custom btn-success-custom">Create Order</button>
+                <a href="/orders" class="btn btn-custom btn-cancel">Cancel</a>
+            </div>
+
+        </form>
     </div>
-
-    <a href="/orders" class="btn btn-secondary mt-3">Back to Order List</a>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

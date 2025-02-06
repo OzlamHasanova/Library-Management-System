@@ -122,6 +122,17 @@
                 <input type="number" class="form-control" id="stock" th:field="*{stock}" required>
             </div>
 
+            <div class="mb-3">
+                <label for="category" class="form-label">Select Category</label>
+                <select class="form-select" id="category" th:field="*{categoryId}" required>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}"></option>
+                </select>
+            </div>
+
+
+
             <!-- Authors Selection -->
             <div class="mb-3">
                 <label for="authors" class="form-label">Select Authors</label>

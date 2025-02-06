@@ -19,4 +19,6 @@ public class BookDTO {
     private Long stock;
     private Set<Long> authorIds;
     private Set<String> authorNames = new HashSet<>();
+    private Long categoryId;
+    private String categoryName;
 }

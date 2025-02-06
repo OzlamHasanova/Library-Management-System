@@ -30,15 +30,15 @@ public class StudentService {
         return studentMapper.toDTO(savedStudent);
     }
 
-    public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        student.setName(studentDTO.getName());
-        student.setSurname(studentDTO.getSurname());
-        student.setSif(studentDTO.getSif());
-        Student updatedStudent = studentRepository.save(student);
-        return studentMapper.toDTO(updatedStudent);
-    }
+//    public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
+//        Student student = studentRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Student not found"));
+//        student.setName(studentDTO.getName());
+//        student.setSurname(studentDTO.getSurname());
+//        student.setSif(studentDTO.getSif());
+//        Student updatedStudent = studentRepository.save(student);
+//        return studentMapper.toDTO(updatedStudent);
+//    }
 
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);

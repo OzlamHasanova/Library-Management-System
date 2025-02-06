@@ -2,13 +2,30 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.mapper;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.CategoryDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Category;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface CategoryMapper {
+@Component
+public class CategoryMapper {
 
-    CategoryDTO toCategoryDTO(Category category);
+    public CategoryDTO toCategoryDTO(Category category) {
+        if (category == null) {
+            return null;
+        }
 
-    Category toCategory(CategoryDTO categoryDTO);
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setId(category.getId());
+        categoryDTO.setName(category.getName());
+        return categoryDTO;
+    }
+
+    public Category toCategory(CategoryDTO categoryDTO) {
+        if (categoryDTO == null) {
+            return null;
+        }
+
+        Category category = new Category();
+        category.setId(categoryDTO.getId());
+        category.setName(categoryDTO.getName());
+        return category;
+    }
 }

@@ -20,12 +20,7 @@ public class AuthorService {
 
     public List<AuthorDTO> getAllAuthors() {
         List<Author> authors = authorRepository.findAll();
-        return authors.stream().map(author -> {
-            AuthorDTO authorDTO = new AuthorDTO();
-            authorDTO.setId(author.getId());
-            authorDTO.setFullName(author.getFullName());
-            return authorDTO;
-        }).collect(Collectors.toList());
+        return authorMapper.toAuthorDTOList(authors);
     }
 
 

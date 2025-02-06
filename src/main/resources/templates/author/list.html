@@ -1,34 +1,165 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Authors List</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary-bg: #1e1e2e;
+            --secondary-bg: #282a36;
+            --accent-color: #ff9f1c;
+            --text-light: #e0e0e0;
+            --btn-edit: #f77f00;
+            --btn-delete: #d00000;
+            --card-hover: #32344a;
+        }
+
+        body {
+            background: var(--primary-bg);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin-top: 40px;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .btn-add {
+            background: var(--accent-color);
+            color: #1e1e2e;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-add:hover {
+            background: #ff7f50;
+            color: white;
+        }
+
+        .author-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .author-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .author-item:hover {
+            background: var(--card-hover);
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .author-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .author-dates {
+            font-size: 0.9rem;
+            color: #bdbdbd;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-edit {
+            background: var(--btn-edit);
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-edit:hover {
+            background: #dc6700;
+        }
+
+        .btn-delete {
+            background: var(--btn-delete);
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-delete:hover {
+            background: #a30000;
+        }
+    </style>
+    <script>
+        function confirmDelete(event) {
+            event.preventDefault();
+            let confirmation = confirm("Are you sure you want to delete this author?");
+            if (confirmation) {
+                event.target.closest("form").submit();
+            }
+        }
+    </script>
 </head>
 <body>
-<div class="container mt-5">
-    <h2>Authors</h2>
-    <a class="btn btn-primary mb-3" href="/authors/new">Add New Author</a>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Full Name</th>
-            <th>Birth Date</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="author : ${authors}">
-            <td th:text="${author.id}"></td>
-            <td th:text="${author.fullName}"></td>
-            <td th:text="${author.birthDate}"></td>
-            <td>
-                <a th:href="@{/authors/edit/{id}(id=${author.id})}" class="btn btn-warning btn-sm">Edit</a>
-                <a th:href="@{/authors/delete/{id}(id=${author.id})}" class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
+<div class="container">
+    <h2 class="header-title">Authors</h2>
+
+    <div class="text-end mb-3">
+        <a class="btn btn-add" href="/authors/new">Add New Author</a>
+    </div>
+
+    <div class="author-list">
+        <div class="author-item" th:each="author : ${authors}">
+            <div class="author-info">
+                <span class="author-name" th:text="${author.fullName}"></span>
+                <span class="author-dates">
+                    Born: <span th:text="${author.birthDate}"></span> |
+                    <span th:if="${author.deathDate != null}">Died: <span th:text="${author.deathDate}"></span></span>
+                </span>
+            </div>
+
+            <div class="action-buttons">
+                <a th:href="@{/authors/edit/{id}(id=${author.id})}" class="btn btn-edit">Edit</a>
+<!--                <a th:href="@{/authors/delete/{id}(id=${author.id})}" class="btn btn-delete">Delete</a>-->
+                <form th:action="@{/authors/delete/{id}(id=${author.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-delete">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
 </body>
 </html>

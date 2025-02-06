@@ -2,9 +2,9 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.BookNotFoundException;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,10 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -25,9 +21,8 @@ public class BookController {
 
     private final BookService bookService;
     private final AuthorService authorService;
+    private final CategoryService categoryService;
     private final CloudinaryService cloudinaryService;
-    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
-
 
     @GetMapping
     public String listBooks(Model model) {
@@ -40,6 +35,7 @@ public class BookController {
     public String showCreateBookForm(Model model) {
         model.addAttribute("book", new BookDTO());
         model.addAttribute("authors", authorService.getAllAuthors());
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "books/create";
     }
 

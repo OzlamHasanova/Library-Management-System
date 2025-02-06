@@ -1,19 +1,48 @@
-//package com.intelliacademy.orizonroute.librarymanagmentsystem.mapper;
-//
-//import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.OrderDTO;
-//import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Order;
-//import org.mapstruct.Mapper;
-//import org.mapstruct.Mapping;
-//import org.mapstruct.ReportingPolicy;
-//
-//@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-//public interface OrderMapper {
-//
-//    @Mapping(source = "student.sif", target = "studentSif")
-//    @Mapping(source = "book.id", target = "bookId")
-//    OrderDTO toDTO(Order order);
-//
-//    @Mapping(source = "studentSif", target = "student.sif")
-//    @Mapping(source = "bookId", target = "book.id")
-//    Order toEntity(OrderDTO orderDTO);
-//}
+package com.intelliacademy.orizonroute.librarymanagmentsystem.mapper;
+
+import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.OrderDTO;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Order;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.model.enums.OrderStatus;
+import org.springframework.stereotype.Component;
+
+@Component
+public class OrderMapper {
+
+    public OrderDTO toDTO(Order order) {
+        if (order == null) {
+            return null;
+        }
+
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(order.getId());
+        orderDTO.setStudentSif(order.getStudent().getSif());
+        orderDTO.setBookId(order.getBook().getId());
+        orderDTO.setStatus(order.getStatus().name());
+        orderDTO.setOrderTimestamp(order.getOrderTimestamp());
+        orderDTO.setReturnTimestamp(order.getReturnTimestamp());
+        orderDTO.setDueDate(order.getDueDate());
+        orderDTO.setFineAmount(order.getFineAmount());
+        orderDTO.setReturned(order.isReturned());
+        orderDTO.setNotes(order.getNotes());
+
+        return orderDTO;
+    }
+
+    public Order toEntity(OrderDTO orderDTO) {
+        if (orderDTO == null) {
+            return null;
+        }
+
+        Order order = new Order();
+        order.setId(orderDTO.getId());
+        order.setStatus(OrderStatus.valueOf(orderDTO.getStatus()));
+        order.setOrderTimestamp(orderDTO.getOrderTimestamp());
+        order.setReturnTimestamp(orderDTO.getReturnTimestamp());
+        order.setDueDate(orderDTO.getDueDate());
+        order.setFineAmount(orderDTO.getFineAmount());
+        order.setReturned(orderDTO.isReturned());
+        order.setNotes(orderDTO.getNotes());
+
+        return order;
+    }
+}

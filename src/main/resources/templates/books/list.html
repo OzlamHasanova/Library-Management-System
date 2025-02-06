@@ -146,6 +146,11 @@
                     <span th:text="'Stock: ' + ${book.stock}"></span>
                 </div>
 
+                <div class="book-details">
+                    <span th:text="'Category: ' + ${book.categoryName}"></span>
+                </div>
+
+
                 <div class="availability mt-2" th:classappend="${book.availability == 'AVAILABLE' ? 'available' : 'unavailable'}"
                      th:text="${book.availability}">
                 </div>
