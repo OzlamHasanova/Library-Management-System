@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table
 @Getter
 @Setter
 public class Author {
@@ -22,6 +21,7 @@ public class Author {
     private LocalDate deathDate;
     private String biography;
 
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Book> books = new HashSet<>();
+
 }

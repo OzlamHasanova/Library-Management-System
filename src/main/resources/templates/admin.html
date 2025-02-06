@@ -3,79 +3,1650 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Admin Dashboard - Library Management System</title>
+
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <style>
+        :root {
+            --primary-color: #242440;  /* Keep this single color */
+
+            --secondary-color: #4F5D75;
+
+            --accent-color: #8B4513;
+
+            /* Update gradients for cards only */
+            --gradient-1: linear-gradient(135deg, #69462B, #8B4513);
+            --gradient-2: linear-gradient(135deg, #2D3142, #4F5D75);
+
+            --gradient-3: linear-gradient(135deg, #614936, #8E6343);
+
+            --gradient-4: linear-gradient(135deg, #4A4E69, #686D8C);
+
+
+            --text-light: #F4EBD0;     /* Aged paper color */
+            --card-bg: rgba(36, 36, 64, 0.95);
+            --sidebar-bg: rgba(36, 36, 64, 0.98);
+        }
+
         body {
-            background-image: url('/background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100vh;
+            background: #242440;  /* Use the exact same color directly */
+            min-height: 100vh;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
         }
+
+        /* Remove any background animations or effects */
+        .magical-background,
+        .magical-particles,
+        .magic-particles {
+            display: none;
+        }
+
         .sidebar {
-            width: 250px;
+            width: 280px;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--sidebar-bg);
             position: fixed;
             padding-top: 20px;
-            transition: width 0.3s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 25px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transform: translateX(-240px); /* Initially closed */
         }
-        .sidebar:hover {
-            width: 280px;
+
+        .sidebar:hover,
+        .sidebar.active {
+            transform: translateX(0);
         }
-        .sidebar a {
-            color: white;
+
+        .sidebar .toggle-btn {
+            position: absolute;
+            right: -40px;
+            top: 10px;
+            background: var(--accent-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 0 8px 8px 0;
             display: flex;
             align-items: center;
-            padding: 15px;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .sidebar i {
-            width: 30px;
-            text-align: center;
-            margin-right: 10px;
-        }
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-        .card {
-            background: #29294a;
-            border: none;
+            justify-content: center;
+            cursor: pointer;
             color: white;
+            border: none;
+            transition: all 0.3s ease;
         }
+
+        .sidebar .toggle-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .main-content {
+            margin-left: 40px; /* Adjust margin to show only toggle button */
+            padding: 30px;
+            transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.active + .main-content {
+            margin-left: 280px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px !important;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            animation-fill-mode: both;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: translateY(100%);
+            transition: 0.6s;
+        }
+
+        .card:hover::before {
+            transform: translateY(-100%);
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .card p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .btn-light {
+            background: var(--accent-color);
+            color: var(--text-light);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-light:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            color: var(--text-light);
+        }
+
         .footer {
-            text-align: center;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.9);
             position: fixed;
             bottom: 0;
             width: 100%;
+            background: rgba(45, 49, 66, 0.98);
+            backdrop-filter: blur(10px);
+            border-top: 2px solid rgba(139, 69, 19, 0.4);
+            padding: 15px 0;
+            transform: translateY(70%);
+            transition: transform 0.4s ease;
+            z-index: 1000;
+        }
+
+        .footer:hover {
+            transform: translateY(0);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .signature-container {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .signature {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        .signature-line {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg,
+            transparent,
+            rgba(139, 69, 19, 0.8),
+            transparent
+            );
+        }
+
+        .copyright {
+            color: #8B4513;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(139, 69, 19, 0.4);
+        }
+
+        .dev-name {
+            color: #F4EBD0;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .dev-title {
+            color: #F4EBD0;
+            font-size: 1rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .icon-main {
+            color: #8B4513;
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+
+        .footer:hover .icon-main {
+            transform: rotate(360deg);
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                transform: translateY(0);
+                padding: 10px 0;
+            }
+
+            .signature {
+                gap: 15px;
+                padding: 0 15px;
+            }
+
+            .signature-line {
+                width: 40px;
+            }
+        }
+
+        .book-icon, .feather-icon {
+            color: var(--accent-color);
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .footer:hover .book-icon {
+            animation: rotateBook 3s infinite;
+        }
+
+        .footer:hover .feather-icon {
+            animation: floatFeather 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes rotateBook {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes floatFeather {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(10deg); }
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                transform: translateY(0);
+            }
+
+            .book-animation {
+                display: none;
+            }
+
+            .footer-text > div {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:nth-child(1) { animation-delay: 0.2s; }
+        .card:nth-child(2) { animation-delay: 0.4s; }
+        .card:nth-child(3) { animation-delay: 0.6s; }
+        .card:nth-child(4) { animation-delay: 0.8s; }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .card h3 {
+                font-size: 2.5rem;
+            }
+            .card p {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .sidebar h4 {
+                font-size: 0;
+                padding: 15px 0;
+                margin-bottom: 20px;
+            }
+
+            .sidebar a {
+                padding: 15px;
+                margin: 5px;
+                justify-content: center;
+            }
+
+            .sidebar a span {
+                display: none;
+            }
+
+            .sidebar i {
+                margin: 0;
+                font-size: 1.5em;
+            }
+
+            .main-content {
+                margin-left: 80px;
+            }
+
+            .card {
+                min-height: 160px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar.active + .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card h3 {
+                font-size: 2rem;
+            }
+            .card p {
+                font-size: 1rem;
+            }
+            .btn-light {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #8B4513;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #69462B;
+        }
+
+        /* Hamburger Menu Button */
+        .hamburger-menu {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #8B4513;
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .hamburger-menu:hover {
+            background: #69462B;
+            transform: scale(1.05);
+        }
+
+        .hamburger-menu:active {
+            transform: scale(0.95);
+        }
+
+        /* Enhanced Sidebar Menu Items */
+        .sidebar-item {
+            margin: 5px 15px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .menu-toggle {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .menu-toggle i:first-child {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-right: 12px;
+            border-radius: 6px;
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle span {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .menu-toggle .fa-chevron-down {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .menu-toggle:hover {
+            background: rgba(139, 69, 19, 0.2);
+        }
+
+        .menu-toggle:hover i:first-child {
+            color: var(--text-light);
+            transform: scale(1.1);
+        }
+
+        .menu-toggle.active {
+            background: var(--accent-color);
+        }
+
+        .menu-toggle.active i:first-child {
+            color: var(--text-light);
+        }
+
+        .menu-toggle.active .fa-chevron-down {
+            transform: rotate(-180deg);
+            color: var(--text-light);
+        }
+
+        /* Enhanced Submenu */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.03);
+            margin: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .submenu.active {
+            max-height: 300px;
+            margin-top: 5px;
+        }
+
+        .submenu a {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px 10px 56px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .submenu a i {
+            font-size: 0.5rem;
+            position: absolute;
+            left: 35px;
+            color: var(--accent-color);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .submenu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        .submenu a:hover i {
+            opacity: 1;
+            left: 40px;
+        }
+
+        /* Sidebar Header */
+        .sidebar h4 {
+            color: var(--text-light);
+            padding: 20px 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar-item .menu-toggle {
+                padding: 12px 15px;
+                justify-content: center;
+            }
+
+            .sidebar-item .menu-toggle span,
+            .sidebar-item .menu-toggle .fa-chevron-down {
+                display: none;
+            }
+
+            .sidebar:hover .menu-toggle {
+                padding: 12px 20px;
+                justify-content: flex-start;
+            }
+
+            .sidebar:hover .menu-toggle span,
+            .sidebar:hover .menu-toggle .fa-chevron-down {
+                display: block;
+            }
+
+            .submenu a {
+                padding: 10px 15px 10px 50px;
+            }
+        }
+
+        /* Add overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .stat-card {
+            background: rgba(45, 49, 66, 0.98) !important;  /* Darker, more opaque background */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            min-height: 220px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(125deg, transparent 0%, rgba(255,255,255,0.2) 46%, transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .stat-card:hover::after {
+            transform: translateX(100%);
+        }
+
+        .stat-card.books {
+            background: linear-gradient(135deg, rgba(105, 70, 43, 0.98), rgba(139, 69, 19, 0.98)) !important;
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.3);
+        }
+
+        .stat-card.orders {
+            background: linear-gradient(135deg, rgba(45, 49, 66, 0.98), rgba(79, 93, 117, 0.98)) !important;
+            box-shadow: 0 10px 30px rgba(45, 49, 66, 0.3);
+        }
+
+        .stat-card.authors {
+            background: linear-gradient(135deg, rgba(97, 73, 54, 0.98), rgba(142, 99, 67, 0.98)) !important;
+            box-shadow: 0 10px 30px rgba(97, 73, 54, 0.3);
+        }
+
+        .stat-card.categories {
+            background: linear-gradient(135deg, rgba(74, 78, 105, 0.98), rgba(104, 109, 140, 0.98)) !important;
+            box-shadow: 0 10px 30px rgba(74, 78, 105, 0.3);
+        }
+
+        .card-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.5s ease;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        .stat-card:hover .card-icon {
+            transform: scale(1.2) rotate(15deg);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .stat-card h3 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #F4EBD0, rgba(244, 235, 208, 0.8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            transform: translateZ(20px);
+            animation: numberPop 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            letter-spacing: 1px;
+            transform: translateZ(15px);
+        }
+
+        .card-btn {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: translateZ(10px);
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .card-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateZ(10px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .card-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.05), transparent);
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+
+        .stat-card:hover .card-wave {
+            transform: translateY(50%);
+        }
+
+        /* Add new animations */
+        @keyframes floatIcon {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes numberPop {
+            0% {
+                transform: translateZ(0) scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: translateZ(20px) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .stat-card {
+            animation: glowPulse 3s infinite;
+        }
+
+        /* Update counter animation */
+        .counter {
+            animation: countUp 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            display: inline-block;
+            position: relative;
+        }
+
+        .counter::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.3);
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: lineGrow 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 1s;
+        }
+
+        @keyframes lineGrow {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        /* Add hover effect for cards */
+        .stat-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .magic-particles {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            pointer-events: none;
+            background:
+                    radial-gradient(circle at 20% 80%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.1) 0%, transparent 50%);
+        }
+
+        .flying-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .flying-book {
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            animation: flyAcross 15s linear infinite;
+            opacity: 0;
+        }
+
+        .flying-book:nth-child(1) { animation-delay: 0s; top: 20%; }
+        .flying-book:nth-child(2) { animation-delay: 5s; top: 40%; }
+        .flying-book:nth-child(3) { animation-delay: 10s; top: 60%; }
+
+        .magic-star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
+            animation: twinkle var(--duration) ease-in-out infinite;
+        }
+
+        .magic-star:nth-child(4) { top: 30%; left: 20%; animation-delay: 0.5s; }
+        .magic-star:nth-child(5) { top: 50%; left: 80%; animation-delay: 1s; }
+
+        @keyframes flyAcross {
+            0% {
+                transform: translateX(-100%) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+        }
+
+        .magic-symbol {
+            font-size: 2rem;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            animation: magicPulse 2s infinite;
+        }
+
+        .floating-text {
+            display: inline-block;
+            animation: floatText 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        .floating-text::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .magic-quill {
+            position: relative;
+            font-size: 2rem;
+            color: #FFD700;
+            animation: writeQuill 3s ease-in-out infinite;
+        }
+
+        .ink-trail {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 2px;
+            height: 10px;
+            background: var(--accent-color);
+            animation: inkDrop 1.5s infinite;
+        }
+
+        .magic-scroll {
+            display: inline-block;
+            position: relative;
+            font-size: 1.5rem;
+            color: #FFD700;
+            animation: unrollScroll 3s ease-in-out infinite;
+        }
+
+        .scroll-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%);
+            animation: glowPulse 2s infinite;
+        }
+
+        @keyframes magicPulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            }
+            50% {
+                transform: scale(1.2);
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            }
+        }
+
+        @keyframes floatText {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes writeQuill {
+            0%, 100% { transform: translateX(0) rotate(45deg); }
+            50% { transform: translateX(10px) rotate(35deg); }
+        }
+
+        @keyframes unrollScroll {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(360deg) scale(1.2); }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .magic-line {
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+            animation: expandLine 2s infinite;
+        }
+
+        @keyframes expandLine {
+            0%, 100% { transform: scaleX(0.5); opacity: 0.5; }
+            50% { transform: scaleX(1); opacity: 1; }
+        }
+
+        .footer:hover .flying-book {
+            animation-duration: 8s;
+        }
+
+        .footer:hover .magic-star {
+            animation-duration: 1s;
+        }
+
+        .stars-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 4s) infinite var(--delay, 0s);
+        }
+
+        .star:nth-child(1) { left: 10%; top: 20%; --duration: 4s; --delay: 0s; }
+        .star:nth-child(2) { left: 30%; top: 40%; --duration: 5s; --delay: 1s; }
+        .star:nth-child(3) { left: 50%; top: 30%; --duration: 3s; --delay: 2s; }
+        .star:nth-child(4) { left: 70%; top: 50%; --duration: 4s; --delay: 1.5s; }
+        .star:nth-child(5) { left: 90%; top: 25%; --duration: 5s; --delay: 0.5s; }
+
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, #ffffff, transparent);
+            animation: shootingStar 8s linear infinite;
+            transform: rotate(-45deg);
+        }
+
+        .flying-book {
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            animation: floatAcross 20s linear infinite;
+            opacity: 0;
+        }
+
+        .book-trail {
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+            transform: translateX(-100%);
+        }
+
+        .flying-scroll {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #FFD700;
+            animation: floatAcross 25s linear infinite;
+            opacity: 0;
+            top: 40%;
+        }
+
+        .scroll-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,215,0,0.2), transparent 70%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+        }
+
+        @keyframes shootingStar {
+            0% {
+                transform: translateX(-100%) translateY(100%) rotate(-45deg);
+                opacity: 1;
+            }
+            20% {
+                opacity: 1;
+            }
+            30% {
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(200%) translateY(-200%) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatAcross {
+            0% {
+                transform: translateX(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .ink-sparkles {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, var(--accent-color) 10%, transparent 70%);
+            animation: sparkle 3s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        .magic-book {
+            display: inline-block;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-5px) rotate(5deg);
+            }
+        }
+
+        .footer:hover .flying-book {
+            animation-duration: 30s;
+        }
+
+        .footer:hover .flying-scroll {
+            animation-duration: 35s;
+        }
+
+        .footer:hover .shooting-star {
+            animation-duration: 12s;
+        }
+
+        .cosmic-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: rgba(25, 25, 45, 0.95);
+        }
+
+        .star-field {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .star-field::before,
+        .star-field::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: twinkle 7s ease-in-out infinite alternate;
+        }
+
+        .cosmic-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow:
+                    0 0 4px #fff,
+                    0 0 8px #fff,
+                    0 0 12px #fff;
+            animation: glow var(--duration, 3s) ease-in-out infinite var(--delay, 0s);
+        }
+
+        .cosmic-star.large {
+            width: 3px;
+            height: 3px;
+            box-shadow:
+                    0 0 6px #fff,
+                    0 0 12px #fff,
+                    0 0 18px #fff;
+        }
+
+        .stardust {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle,
+            rgba(255, 255, 255, 0.2) 0%,
+            transparent 60%
+            );
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .nebula-line {
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.8),
+            transparent
+            );
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nebula-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        .stardust-text {
+            color: #fff;
+            text-shadow:
+                    0 0 5px rgba(255, 255, 255, 0.5),
+                    0 0 10px rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .magic-books {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .magic-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: float var(--duration) ease-in-out infinite;
+            background: linear-gradient(45deg, var(--color-1), var(--color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+        }
+
+        .enchanted-text {
+            background: linear-gradient(45deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: colorShift 8s infinite;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .magic-feather {
+            display: inline-block;
+            font-size: 1.8rem;
+            animation: floatFeather 4s ease-in-out infinite;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .magic-line {
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            animation: glowLine 2s ease-in-out infinite;
+        }
+
+        .magic-book-icon {
+            display: inline-block;
+            font-size: 1.5rem;
+            margin: 0 15px;
+            animation: rotateBook 6s ease-in-out infinite;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes colorShift {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        @keyframes floatFeather {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(10deg); }
+        }
+
+        @keyframes glowLine {
+            0%, 100% { opacity: 0.3; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1.2); }
+        }
+
+        @keyframes rotateBook {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        /* Add these new styles */
+        .magic-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .flying-icon {
+            position: absolute;
+            font-size: 1.4rem;
+            color: #8B4513;
+            opacity: 0;
+            animation: flyAcross 8s linear infinite;
+        }
+
+        .flying-icon:nth-child(1) {
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .flying-icon:nth-child(2) {
+            top: 40%;
+            animation-delay: 2.5s;
+        }
+
+        .flying-icon:nth-child(3) {
+            top: 60%;
+            animation-delay: 5s;
+        }
+
+        @keyframes flyAcross {
+            0% {
+                left: -5%;
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                left: 105%;
+                transform: translateY(-20px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .footer:hover .flying-icon {
+            animation-duration: 12s;
+        }
+
+        /* Enchanted sparkles that float around */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: transparent;
+            border-radius: 50%;
+            animation: sparkleFloat 6s linear infinite;
+        }
+
+        .sparkle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform: rotate(45deg);
+            background: linear-gradient(45deg, #FFD700, transparent);
+        }
+
+        /* Add magical dust trail */
+        .magic-dust {
+            position: absolute;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            filter: url(#gooey);
+        }
+
+        .dust-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 215, 0, 0.6);
+            border-radius: 50%;
+            animation: dustFloat 10s infinite;
+        }
+
+        /* Glowing aura around icons */
+        .flying-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(139, 69, 19, 0.2), transparent 70%);
+            filter: blur(5px);
+            animation: auraGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--moveX), var(--moveY)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes dustFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            25% {
+                opacity: 1;
+            }
+            50% {
+                transform: translate(var(--floatX), var(--floatY)) scale(1.5);
+                opacity: 0.5;
+            }
+            75% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes auraGlow {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.6;
+            }
+        }
+
+        /* Magical Ink Swirls */
+        .ink-swirl {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(139, 69, 19, 0.3);
+            filter: blur(5px);
+            animation: swirl 15s infinite;
+        }
+
+        .ink-swirl:nth-child(4) {
+            left: 30%;
+            top: 40%;
+            animation-delay: 0s;
+        }
+
+        .ink-swirl:nth-child(5) {
+            left: 70%;
+            top: 30%;
+            animation-delay: 7s;
+        }
+
+        /* Update Floating Letters Effect */
+        .floating-letters {
+            position: absolute;
+            font-family: 'Crimson Text', 'Times New Roman', serif;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, rgba(139, 69, 19, 0.4), rgba(255, 215, 0, 0.4));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+            animation: floatText 20s linear infinite;
+            opacity: 0;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+        }
+
+        /* Add magical quotes */
+        .magic-quote {
+            position: absolute;
+            font-family: 'Crimson Text', serif;
+            font-size: 0.9rem;
+            color: rgba(139, 69, 19, 0.4);
+            white-space: nowrap;
+            animation: fadeInOut 15s linear infinite;
+            opacity: 0;
+            font-style: italic;
+        }
+
+        /* Add old-style page numbers */
+        .page-number {
+            position: absolute;
+            font-family: 'Old Standard TT', serif;
+            font-size: 0.8rem;
+            color: rgba(139, 69, 19, 0.3);
+            animation: numberFloat 12s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translateY(20px); }
+            10%, 90% { opacity: 0.4; transform: translateY(0); }
+            50% { opacity: 0.6; transform: translateY(-10px); }
+        }
+
+        @keyframes numberFloat {
+            0% { transform: rotate(-10deg) translateY(0); opacity: 0; }
+            50% { transform: rotate(5deg) translateY(-15px); opacity: 0.3; }
+            100% { transform: rotate(-10deg) translateY(0); opacity: 0; }
         }
     </style>
 </head>
 <body>
-<!-- Sidebar -->
-<div class="sidebar">
+<!-- Change the hamburger button class to avoid conflict -->
+<button class="hamburger-menu" id="menuToggle">
+    <i class="fas fa-bars"></i>
+</button>
+
+<!-- Update the sidebar div -->
+<div class="sidebar" id="sidebar">
+    <button class="toggle-btn" id="sidebarToggle">
+        <i class="fas fa-chevron-right"></i>
+    </button>
     <h4 class="text-center text-white">Admin Dashboard</h4>
-    <a href="/books"><i class="fas fa-book"></i> Books</a>
-    <a href="/authors"><i class="fas fa-user"></i> Authors</a>
-    <a href="/categories"><i class="fas fa-list"></i> Categories</a>
-    <a href="/students"><i class="fas fa-users"></i> Students</a>
-    <a href="/orders"><i class="fas fa-shopping-cart"></i> Orders</a>
+
+    <!-- Books Submenu -->
+    <div class="sidebar-item">
+        <a href="/books" class="menu-toggle">
+            <i class="fas fa-book"></i>
+            <span>Books</span>
+            <i class="fas fa-chevron-down ms-auto"></i>
+        </a>
+        <div class="submenu">
+            <a href="/books/list"><i class="fas fa-circle-dot"></i> <span>All Books</span></a>
+            <a href="/books/create"><i class="fas fa-circle-dot"></i> <span>Add Book</span></a>
+            <a href="/books/borrowed"><i class="fas fa-circle-dot"></i> <span>Borrowed Books</span></a>
+        </div>
+    </div>
+
+    <!-- Authors Submenu -->
+    <div class="sidebar-item">
+        <a href="/authors" class="menu-toggle">
+            <i class="fas fa-user"></i>
+            <span>Authors</span>
+            <i class="fas fa-chevron-down ms-auto"></i>
+        </a>
+        <div class="submenu">
+            <a href="/authors/list"><i class="fas fa-circle-dot"></i> <span>All Authors</span></a>
+            <a href="/authors/create"><i class="fas fa-circle-dot"></i> <span>Add Author</span></a>
+        </div>
+    </div>
+
+    <!-- Categories Submenu -->
+    <div class="sidebar-item">
+        <a href="/categories" class="menu-toggle">
+            <i class="fas fa-list"></i>
+            <span>Categories</span>
+            <i class="fas fa-chevron-down ms-auto"></i>
+        </a>
+        <div class="submenu">
+            <a href="/categories/fiction"><i class="fas fa-circle-dot"></i> <span>Fiction</span></a>
+            <a href="/categories/non-fiction"><i class="fas fa-circle-dot"></i> <span>Non-Fiction</span></a>
+            <a href="/categories/science"><i class="fas fa-circle-dot"></i> <span>Science</span></a>
+            <a href="/categories/history"><i class="fas fa-circle-dot"></i> <span>History</span></a>
+        </div>
+    </div>
+
+    <!-- Students Submenu -->
+    <div class="sidebar-item">
+        <a href="/students" class="menu-toggle">
+            <i class="fas fa-users"></i>
+            <span>Students</span>
+            <i class="fas fa-chevron-down ms-auto"></i>
+        </a>
+        <div class="submenu">
+            <a href="/students/list"><i class="fas fa-circle-dot"></i> <span>All Students</span></a>
+            <a href="/students/add"><i class="fas fa-circle-dot"></i> <span>Add Student</span></a>
+            <a href="/students/borrowed"><i class="fas fa-circle-dot"></i> <span>Borrowed Books</span></a>
+        </div>
+    </div>
+
+    <!-- Orders Submenu -->
+    <div class="sidebar-item">
+        <a href="/orders" class="menu-toggle">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Orders</span>
+            <i class="fas fa-chevron-down ms-auto"></i>
+        </a>
+        <div class="submenu">
+            <a href="/orders/pending"><i class="fas fa-circle-dot"></i> <span>Pending Orders</span></a>
+            <a href="/orders/approved"><i class="fas fa-circle-dot"></i> <span>Approved Orders</span></a>
+            <a href="/orders/history"><i class="fas fa-circle-dot"></i> <span>Order History</span></a>
+        </div>
+    </div>
 </div>
 
 <!-- Main Content -->
@@ -83,39 +1654,384 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3">
-                <div class="card p-3">
-                    <h3>150</h3>
-                    <p>Books Available</p>
+                <div class="stat-card books">
+                    <div class="card-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="number-wrapper">
+                            <h3 class="counter" data-target="150">0</h3>
+                        </div>
+                        <p>Books Available</p>
+                    </div>
+                    <div class="card-wave"></div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3">
-                    <h3>45</h3>
-                    <p>Orders in Progress</p>
+                <div class="stat-card orders">
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="number-wrapper">
+                            <h3 class="counter" data-target="45">0</h3>
+                        </div>
+                        <p>Orders in Progress</p>
+                    </div>
+                    <div class="card-wave"></div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3">
-                    <h3 th:text="${authorCount}">0</h3>
-                    <p>Authors</p>
-                    <a href="/authors" class="btn btn-light">View Authors</a>
+                <div class="stat-card authors">
+                    <div class="card-icon">
+                        <i class="fas fa-feather"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="number-wrapper">
+                            <h3 class="counter" th:data-target="${authorCount}">0</h3>
+                        </div>
+                        <p>Authors</p>
+                        <a href="/authors" class="card-btn">View Authors</a>
+                    </div>
+                    <div class="card-wave"></div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3">
-                    <h3>25</h3>
-                    <p>Categories</p>
+                <div class="stat-card categories">
+                    <div class="card-icon">
+                        <i class="fas fa-bookmark"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="number-wrapper">
+                            <h3 class="counter" data-target="25">0</h3>
+                        </div>
+                        <p>Categories</p>
+                    </div>
+                    <div class="card-wave"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Footer -->
-<div class="footer">
-    <p>&copy; 2025 Library Management System. All Rights Reserved.</p>
-</div>
+<!-- Add this right before the footer -->
+<div class="magic-particles"></div>
+
+<!-- Update the footer section -->
+<footer class="footer">
+    <div class="magic-elements">
+        <i class="fas fa-book-open flying-icon"></i>
+        <i class="fas fa-feather-alt flying-icon"></i>
+        <i class="fas fa-book flying-icon"></i>
+
+        <!-- Add magical ink swirls -->
+        <div class="ink-swirl"></div>
+        <div class="ink-swirl"></div>
+
+        <!-- Add floating letters -->
+        <div class="floating-letters">LIBRARY</div>
+
+        <!-- Add glowing orbs -->
+        <div class="magic-orb"></div>
+        <div class="magic-orb"></div>
+    </div>
+    <div class="footer-content">
+        <div class="signature-container">
+            <div class="signature-line"></div>
+            <div class="signature">
+                <span class="copyright">©</span>
+                <span class="dev-name">ozlem2002</span>
+                <i class="fas fa-book-reader icon-main"></i>
+                <span class="dev-title">fullstack</span>
+                <span class="dev-name">ozlem hamfendi</span>
+            </div>
+            <div class="signature-line"></div>
+        </div>
+    </div>
+</footer>
+
+<!-- Add this before the closing body tag -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const isMobile = window.innerWidth <= 768;
+
+        // Initially close sidebar on mobile
+        if (isMobile) {
+            sidebar.classList.add('closed');
+        }
+
+        // Hamburger menu toggle
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+
+            if (sidebar.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (isMobile &&
+                !sidebar.contains(event.target) &&
+                !menuToggle.contains(event.target) &&
+                sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const isMobile = window.innerWidth <= 768;
+            if (!isMobile) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Submenu toggles
+        const menuToggles = document.querySelectorAll('.menu-toggle');
+
+        menuToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Close all other submenus
+                menuToggles.forEach(otherToggle => {
+                    if (otherToggle !== toggle) {
+                        otherToggle.classList.remove('active');
+                        otherToggle.nextElementSibling.classList.remove('active');
+                    }
+                });
+
+                // Toggle current submenu
+                this.classList.toggle('active');
+                this.nextElementSibling.classList.toggle('active');
+            });
+        });
+
+        // Close submenus when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.sidebar-item')) {
+                menuToggles.forEach(toggle => {
+                    toggle.classList.remove('active');
+                    toggle.nextElementSibling.classList.remove('active');
+                });
+            }
+        });
+
+        const sidebarToggle = document.getElementById('sidebarToggle');
+
+        // Toggle sidebar
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+            this.querySelector('i').classList.toggle('fa-chevron-right');
+            this.querySelector('i').classList.toggle('fa-chevron-left');
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                sidebar.classList.remove('active');
+                sidebarToggle.querySelector('i').classList.remove('fa-chevron-left');
+                sidebarToggle.querySelector('i').classList.add('fa-chevron-right');
+            }
+        });
+
+        const counters = document.querySelectorAll('.counter');
+
+        const animateCounter = (counter) => {
+            const target = +counter.getAttribute('data-target');
+            let current = 0;
+            const increment = target / 50; // Adjust speed here
+
+            const updateCounter = () => {
+                if (current < target) {
+                    current += increment;
+                    counter.textContent = Math.ceil(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+
+            updateCounter();
+        };
+
+        // Intersection Observer for animation trigger
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => observer.observe(counter));
+    });
+
+    function createStars() {
+        const starField = document.querySelector('.star-field');
+        const colors = ['#FFD700', '#FFF', '#FF6B6B', '#4ECDC4'];
+
+        for(let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'magic-star';
+
+            // Random position
+            star.style.left = ${Math.random() * 100}%;
+            star.style.top = ${Math.random() * 100}%;
+
+            // Random size
+            const size = Math.random() * 3 + 1;
+            star.style.width = ${size}px;
+            star.style.height = ${size}px;
+
+            // Random animation duration and delay
+            star.style.setProperty('--duration', ${2 + Math.random() * 3}s);
+            star.style.animationDelay = ${Math.random() * 2}s;
+
+            // Random color
+            star.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            starField.appendChild(star);
+        }
+
+        // Create floating books
+        const magicBooks = document.querySelector('.magic-books');
+        const bookIcons = magicBooks.querySelectorAll('.magic-icon');
+
+        bookIcons.forEach((icon, index) => {
+            icon.style.setProperty('--duration', ${4 + index}s);
+            icon.style.left = ${20 + index * 30}%;
+            icon.style.top = '50%';
+            icon.style.setProperty('--color-1', colors[index % colors.length]);
+            icon.style.setProperty('--color-2', colors[(index + 1) % colors.length]);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', createStars);
+
+    // Add this to your existing script
+    function addShootingStars() {
+        const magicElements = document.querySelector('.magic-elements');
+
+        setInterval(() => {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            shootingStar.style.top = ${Math.random() * 100}%;
+            shootingStar.style.left = '0';
+            magicElements.appendChild(shootingStar);
+
+            // Remove shooting star after animation
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 4000);
+        }, 8000); // Create new shooting star every 8 seconds
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        addShootingStars();
+    });
+
+    // Add this to your existing script
+    function createMagicalEffects() {
+        const container = document.querySelector('.magic-elements');
+
+        // Create sparkles
+        for(let i = 0; i < 20; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.setProperty('--moveX', ${-50 + Math.random() * 100}px);
+            sparkle.style.setProperty('--moveY', ${-50 + Math.random() * 100}px);
+            sparkle.style.left = ${Math.random() * 100}%;
+            sparkle.style.top = ${Math.random() * 100}%;
+            sparkle.style.animationDelay = ${Math.random() * 5}s;
+            container.appendChild(sparkle);
+        }
+
+        // Create magical dust
+        for(let i = 0; i < 15; i++) {
+            const dust = document.createElement('div');
+            dust.className = 'dust-particle';
+            dust.style.setProperty('--floatX', ${-30 + Math.random() * 60}px);
+            dust.style.setProperty('--floatY', ${-30 + Math.random() * 60}px);
+            dust.style.left = ${Math.random() * 100}%;
+            dust.style.top = ${Math.random() * 100}%;
+            dust.style.animationDelay = ${Math.random() * 10}s;
+            container.appendChild(dust);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        createMagicalEffects();
+    });
+
+    // Update the enhanceMagicalEffects function
+    function enhanceMagicalEffects() {
+        const container = document.querySelector('.magic-elements');
+        const magicalWords = ['LIBRARY', 'BOOKS', 'STORIES', 'WISDOM', 'KNOWLEDGE'];
+        const quotes = [
+            '"In a good bookroom you feel...',
+            '"There is no friend as loyal as a book"',
+            '"Once upon a time..."',
+            '"The library is infinite..."',
+            '"Between the pages lies magic"'
+        ];
+
+        // Create floating magical words
+        setInterval(() => {
+            const text = document.createElement('div');
+            text.className = 'floating-letters';
+            text.textContent = magicalWords[Math.floor(Math.random() * magicalWords.length)];
+            text.style.top = ${Math.random() * 60 + 20}%;
+            container.appendChild(text);
+
+            setTimeout(() => text.remove(), 20000);
+        }, 10000);
+
+        // Create floating quotes
+        setInterval(() => {
+            const quote = document.createElement('div');
+            quote.className = 'magic-quote';
+            quote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+            quote.style.left = ${Math.random() * 60 + 20}%;
+            quote.style.top = ${Math.random() * 40 + 30}%;
+            container.appendChild(quote);
+
+            setTimeout(() => quote.remove(), 15000);
+        }, 15000);
+
+        // Create floating page numbers
+        setInterval(() => {
+            const pageNum = document.createElement('div');
+            pageNum.className = 'page-number';
+            pageNum.textContent = ~ ${Math.floor(Math.random() * 500 + 1)} ~;
+            pageNum.style.left = ${Math.random() * 80 + 10}%;
+            pageNum.style.top = ${Math.random() * 70 + 15}%;
+            container.appendChild(pageNum);
+
+            setTimeout(() => pageNum.remove(), 12000);
+        }, 12000);
+    }
+
+    // Make sure to call the function
+    document.addEventListener('DOMContentLoaded', function() {
+        enhanceMagicalEffects();
+    });
+</script>
 </body>
 </html>

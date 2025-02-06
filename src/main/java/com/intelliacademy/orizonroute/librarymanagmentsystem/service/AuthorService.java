@@ -1,7 +1,6 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.service;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.AuthorDTO;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.UserDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.AuthorMapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.AuthorRepository;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +20,29 @@ public class AuthorService {
 
     public List<AuthorDTO> getAllAuthors() {
         List<Author> authors = authorRepository.findAll();
-        return authorMapper.toAuthorDTOList(authors);
+        return authors.stream().map(author -> {
+            AuthorDTO authorDTO = new AuthorDTO();
+            authorDTO.setId(author.getId());
+            authorDTO.setFullName(author.getFullName());
+            return authorDTO;
+        }).collect(Collectors.toList());
     }
 
+
     public Optional<AuthorDTO> getAuthorById(Long id) {
-        System.out.println(id);
         Optional<Author> author = authorRepository.findById(id);
         return author.map(authorMapper::toAuthorDTO);
+    }
+
+    public Author getAuthorEntityById(Long id) {
+        return authorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author not found with ID: " + id));
+    }
+
+
+    public String getAuthorNameById(Long authorId) {
+        Optional<Author> author = authorRepository.findById(authorId);
+        return author.map(Author::getFullName).orElse("Unknown Author");
     }
 
     public long getAuthorCount() {

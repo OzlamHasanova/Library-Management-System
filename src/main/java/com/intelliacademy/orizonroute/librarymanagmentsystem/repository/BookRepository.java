@@ -9,4 +9,7 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByCategories_Id(Long categoryId);
+
+    List<Book> findByIsDeletedFalse();
+
 }

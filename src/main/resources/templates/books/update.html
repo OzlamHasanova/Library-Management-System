@@ -3,30 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <title>Update Book</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #242440;
+            --secondary-color: #4F5D75;
+            --accent-color: #8B4513;
+            --gradient-1: linear-gradient(135deg, #69462B, #8B4513);
+            --gradient-2: linear-gradient(135deg, #2D3142, #4F5D75);
+            --text-light: #F4EBD0;
+            --card-bg: rgba(36, 36, 64, 0.98);
+        }
+
+        body {
+            background: var(--primary-color);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-light);
+            transition: 0.3s ease-in-out;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(139, 69, 19, 0.5);
+        }
+
+        .btn-custom {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-update {
+            background: var(--gradient-1);
+            color: var(--text-light);
+            border: none;
+        }
+
+        .btn-update:hover {
+            background: #8B4513;
+        }
+
+        .btn-cancel {
+            background: var(--gradient-2);
+            color: var(--text-light);
+            border: none;
+        }
+
+        .btn-cancel:hover {
+            background: #4F5D75;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container mt-5">
-    <h2>Update Book</h2>
+
+<div class="container">
+    <div class="form-container">
+        <h2 class="form-title">Update Book</h2>
+
         <form th:action="@{/books/edit/{id}(id=${book.id})}" th:object="${book}" method="post">
-        <div class="form-group">
-            <label>Title</label>
-            <input type="text" class="form-control"  th:field="*{title}" required>
-        </div>
-        <div class="form-group">
-            <label>ISBN</label>
-            <input type="text" class="form-control" th:field="*{isbn}" required>
-        </div>
-        <div class="form-group">
-            <label for="publicationYear">Publication Year</label>
-            <input type="number" class="form-control" id="publicationYear" th:field="*{publicationYear}" required>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-warning">Update</button>
-    </form>
+
+            <!-- Title -->
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" th:field="*{title}" required>
+            </div>
+
+            <!-- Publication Year -->
+            <div class="mb-3">
+                <label for="publicationYear" class="form-label">Publication Year</label>
+                <input type="number" class="form-control" id="publicationYear" th:field="*{publicationYear}" required>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+            </div>
+
+            <!-- Stock -->
+            <div class="mb-3">
+                <label for="stock" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="stock" th:field="*{stock}" required>
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-custom btn-update">Update Book</button>
+                <a href="/books" class="btn btn-custom btn-cancel">Cancel</a>
+            </div>
+
+        </form>
+    </div>
 </div>
+
 </body>
 </html>

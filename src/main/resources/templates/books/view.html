@@ -3,19 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <title>Book Details</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #242440;
+            --secondary-color: #4F5D75;
+            --accent-color: #8B4513;
+            --gradient-1: linear-gradient(135deg, #69462B, #8B4513);
+            --gradient-2: linear-gradient(135deg, #2D3142, #4F5D75);
+            --text-light: #F4EBD0;
+            --card-bg: rgba(36, 36, 64, 0.98);
+        }
+
+        body {
+            background: var(--primary-color);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .details-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .book-image {
+            width: 300px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: var(--secondary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .book-info {
+            flex: 1;
+        }
+
+        .book-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .book-detail {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .availability {
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .available {
+            background-color: #275232;
+            color: white;
+        }
+
+        .unavailable {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-back {
+            display: block;
+            width: fit-content;
+            padding: 10px 20px;
+            margin: 20px auto 0;
+            text-align: center;
+            background: var(--gradient-2);
+            color: var(--text-light);
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: #4F5D75;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container mt-5">
-    <h2>Book Details</h2>
-    <div>
-        <strong>Title:</strong> <span th:text="${book.title}"></span><br>
-        <strong>ISBN:</strong> <span th:text="${book.isbn}"></span><br>
-        <strong>Publication Year:</strong> <span th:text="${book.publicationYear}"></span><br>
-        <strong>Description:</strong> <span th:text="${book.description}"></span><br>
-        <strong>Stock:</strong> <span th:text="${book.stock}"></span><br>
+
+<div class="container">
+    <div class="details-container">
+
+        <!-- Kitabın şəkli sağ tərəfdə -->
+        <div>
+            <img th:if="${book.image != null and book.image != ''}" th:src="${book.image}" class="book-image" alt="Book Cover">
+            <span th:unless="${book.image != null and book.image != ''}" class="book-image d-flex align-items-center justify-content-center">No Image</span>
+        </div>
+
+        <!-- Kitab məlumatları sol tərəfdə -->
+        <div class="book-info">
+            <h2 class="book-title" th:text="${book.title}"></h2>
+
+            <p class="book-detail"><strong>Publication Year:</strong> <span th:text="${book.publicationYear}"></span></p>
+            <p class="book-detail"><strong>Stock:</strong> <span th:text="${book.stock}"></span></p>
+            <p class="book-detail"><strong>Description:</strong> <span th:text="${book.description}"></span></p>
+
+            <p class="book-detail">
+                <strong>Availability:</strong>
+                <span class="availability" th:classappend="${book.availability == 'AVAILABLE' ? 'available' : 'unavailable'}"
+                      th:text="${book.availability}"></span>
+            </p>
+
+            <p class="book-detail">
+                <strong>Authors:</strong>
+            <ul class="list-unstyled">
+                <li th:each="author : ${book.authorNames}" th:text="${author}"></li>
+            </ul>
+            </p>
+        </div>
     </div>
-    <a href="/books" class="btn btn-secondary mt-3">Back to List</a>
+
+    <!-- Back Button -->
+    <a href="/books" class="btn-back">Back to List</a>
 </div>
+
 </body>
 </html>

@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f0f8ff; /* Açıq mavi fon */
+            background-color: #f0f8ff;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -78,7 +78,6 @@
             <input type="password" class="form-control" id="password" th:field="*{password}" required placeholder="Enter your password">
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
-        <a href="#" class="forgot-password">Forgot Password?</a>
         <div th:if="${param.error}" class="alert alert-danger">
             Invalid username or password.
         </div>

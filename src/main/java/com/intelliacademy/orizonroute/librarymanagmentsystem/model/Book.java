@@ -1,6 +1,7 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.model;
 
 
+import com.intelliacademy.orizonroute.librarymanagmentsystem.model.enums.BookAvailability;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +32,14 @@ public class Book {
 
     private Long stock;
 
-    @ManyToMany
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BookAvailability availability = BookAvailability.AVAILABLE;
+
+    @Column(nullable = false)
+    private boolean isDeleted = false;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_author",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -39,7 +47,8 @@ public class Book {
     )
     private Set<Author> authors = new HashSet<>();
 
-    @ManyToMany
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "book_category",
             joinColumns = @JoinColumn(name = "book_id"),

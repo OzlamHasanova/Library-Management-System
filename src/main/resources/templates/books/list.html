@@ -2,39 +2,171 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>List of Books</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Library Books</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #242440;
+            --secondary-color: #4F5D75;
+            --accent-color: #8B4513;
+            --gradient-1: linear-gradient(135deg, #69462B, #8B4513);
+            --gradient-2: linear-gradient(135deg, #2D3142, #4F5D75);
+            --text-light: #F4EBD0;
+            --card-bg: rgba(36, 36, 64, 0.95);
+        }
+
+        body {
+            background: var(--primary-color);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .book-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            transition: 0.3s;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .book-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: var(--secondary-color);
+        }
+
+        .book-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-top: 10px;
+        }
+
+        .book-details {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-top: 5px;
+        }
+
+        .availability {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .available {
+            background-color: #275232;
+            color: white;
+        }
+
+        .unavailable {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .action-buttons a,
+        .action-buttons button {
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .action-buttons .btn-view {
+            background: var(--gradient-1);
+            color: var(--text-light);
+        }
+
+        .action-buttons .btn-view:hover {
+            background: #8B4513;
+        }
+
+        .action-buttons .btn-edit {
+            background: var(--gradient-2);
+            color: var(--text-light);
+        }
+
+        .action-buttons .btn-edit:hover {
+            background: #4F5D75;
+        }
+
+        .action-buttons .btn-delete {
+            background: #8B0000;
+            color: white;
+        }
+
+        .action-buttons .btn-delete:hover {
+            background: #B22222;
+        }
+    </style>
+
+    <script>
+        function confirmDelete(event) {
+            event.preventDefault();
+            let confirmation = confirm("Are you sure you want to delete this book?");
+            if (confirmation) {
+                event.target.closest("form").submit();
+            }
+        }
+    </script>
 </head>
 <body>
 <div class="container mt-5">
-    <h2>Books</h2>
-    <a href="/books/new" class="btn btn-primary mb-3">Add New Book</a>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>ISBN</th>
-            <th>Publication Year</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="book : ${books}">
-            <td th:text="${book.id}"></td>
-            <td th:text="${book.id}"></td>
-            <td th:text="${book.isbn}"></td>
-            <td th:text="${book.publicationYear}"></td>
-            <td>
-                <a th:href="@{'/books/' + ${book.id}}" class="btn btn-info">View</a>
-                <a th:href="@{'/books/' + 'edit/'+ ${book.id}}" class="btn btn-warning">Edit</a>
-                <form th:action="@{'/books/' + ${book.id} + '/delete'}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <h2 class="text-center text-primary" style="color: #8B4513">Library Books</h2>
+    <div class="text-end mb-3">
+        <a href="/books/new" class="btn btn-success" style="color: #275232">Add New Book</a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="col" th:each="book : ${books}">
+            <div class="book-card p-3">
+                <img th:if="${book.image != null and book.image != ''}" th:src="${book.image}" class="book-image" alt="Book Cover">
+                <span th:unless="${book.image != null and book.image != ''}" class="book-image d-flex align-items-center justify-content-center">No Image</span>
+
+                <div class="book-title" th:text="${book.title}"></div>
+
+                <div class="book-details">
+                    <span th:text="'Year: ' + ${book.publicationYear}"></span><br>
+                    <span th:text="'Stock: ' + ${book.stock}"></span>
+                </div>
+
+                <div class="availability mt-2" th:classappend="${book.availability == 'AVAILABLE' ? 'available' : 'unavailable'}"
+                     th:text="${book.availability}">
+                </div>
+
+                <div class="book-details mt-2">
+                    <strong>Authors:</strong>
+                    <ul class="list-unstyled">
+                        <li th:each="author : ${book.authorNames}" th:text="${author}"></li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons mt-2">
+                    <a th:href="@{'/books/' + ${book.id}}" class="btn btn-view">View</a>
+                    <a th:href="@{'/books/edit/' + ${book.id}}" class="btn btn-edit">Edit</a>
+                    <form th:action="@{'/books/' + ${book.id} + '/delete'}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-delete" onclick="confirmDelete(event)">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
