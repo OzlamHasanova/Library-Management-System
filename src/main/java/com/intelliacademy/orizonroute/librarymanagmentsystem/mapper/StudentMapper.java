@@ -13,7 +13,8 @@ public class StudentMapper {
         }
         StudentDTO studentDTO = new StudentDTO();
         studentDTO.setId(student.getId());
-        studentDTO.setFullName(student.getName() + " " + student.getSurname());
+        studentDTO.setName(student.getName());
+        studentDTO.setSurname(student.getSurname());
         studentDTO.setSif(student.getSif());
         return studentDTO;
     }
@@ -24,8 +25,8 @@ public class StudentMapper {
         }
         Student student = new Student();
         student.setId(studentDTO.getId());
-        student.setName(studentDTO.getFullName().split(" ")[0]);
-        student.setSurname(studentDTO.getFullName().split(" ")[1]);
+        student.setName(studentDTO.getName());
+        student.setSurname(studentDTO.getSurname());
         student.setSif(studentDTO.getSif());
         return student;
     }

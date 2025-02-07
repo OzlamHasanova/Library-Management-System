@@ -14,6 +14,8 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.OrderRep
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,26 +34,19 @@ public class OrderService {
     private final StudentRepository studentRepository;
     private final OrderMapper orderMapper;
 
-    public List<OrderDTO> getAllOrders() {
-        return orderRepository.findAll().stream()
-                .map(orderMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<OrderDTO> getAllOrders(int page, int size) {
+        Page<Order> orders = orderRepository.findAll(PageRequest.of(page, size));
+        return orders.map(orderMapper::toDTO);
     }
 
     @Transactional
-    public OrderDTO createOrder(String sif, Long bookId) {
-        log.info("Creating order for student: {}, book: {}", sif, bookId);
-
+    public OrderDTO createOrder(String sif, String bookIsbn) {
         Student student = studentRepository.findBySif(sif)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found with SIF: " + sif));
-        log.info("Student found: {}", student.getSif());
+                .orElseThrow(() -> new StudentNotFoundException("Student not found"));
+        Book book = bookRepository.findBookByIsbn(bookIsbn)
+                .orElseThrow(() -> new BookNotFoundException("Book not found"));
 
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + bookId));
-        log.info("Book found: {}", book.getTitle());
-
-        if (book.getStock() == null || book.getStock() <= 0) {
-            log.error("Book out of stock!");
+        if (book.getStock() <= 0) {
             throw new RuntimeException("Book is out of stock");
         }
 
@@ -66,22 +61,23 @@ public class OrderService {
         order.setDueDate(LocalDateTime.now().plusWeeks(2));
 
         Order savedOrder = orderRepository.save(order);
-        log.info("Order saved with ID: {}", savedOrder.getId());
-
         return orderMapper.toDTO(savedOrder);
     }
 
     @Transactional
-    public OrderDTO returnOrder(String sif, Long bookId) {
-        Student student = studentRepository.findBySif(sif)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found"));
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookNotFoundException("Book not found"));
+    public OrderDTO returnOrder(String studentSif, String bookIsbn) {
 
-        Order order = orderRepository.findByStudentSif(sif).stream()
-                .filter(o -> o.getBook().getId().equals(bookId) && !o.isReturned())
+        Student student = studentRepository.findBySif(studentSif)
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with SIF: " + studentSif));
+
+        Book book = bookRepository.findBookByIsbn(bookIsbn)
+                .orElseThrow(() -> new BookNotFoundException("Book not found with ISBN: " + bookIsbn));
+
+        Order order = orderRepository.findByStudentSif(studentSif).stream()
+                .filter(o -> o.getBook().getIsbn().equals(bookIsbn) && !o.isReturned())
                 .findFirst()
-                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("No active order found for this student and book."));
+
 
         book.setStock(book.getStock() + 1);
         bookRepository.save(book);
@@ -92,11 +88,17 @@ public class OrderService {
 
         if (order.getReturnTimestamp().isAfter(order.getDueDate())) {
             order.setStatus(OrderStatus.OVERDUE);
-            order.setFineAmount(BigDecimal.valueOf(5).multiply(
-                    BigDecimal.valueOf(order.getReturnTimestamp().getDayOfYear() - order.getDueDate().getDayOfYear())));
+            long daysOverdue = order.getReturnTimestamp().getDayOfYear() - order.getDueDate().getDayOfYear();
+            order.setFineAmount(BigDecimal.valueOf(daysOverdue * 5));
         }
 
         Order savedOrder = orderRepository.save(order);
         return orderMapper.toDTO(savedOrder);
+    }
+
+
+    public OrderDTO getOrderById(Long orderId) {
+        return orderMapper.toDTO(orderRepository.findById(orderId)
+                .orElseThrow(()-> new OrderNotFoundException("Order not found")));
     }
 }

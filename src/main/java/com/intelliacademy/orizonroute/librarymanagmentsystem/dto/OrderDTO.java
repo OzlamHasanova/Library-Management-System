@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class OrderDTO {
     private Long id;
     private String studentSif;
-    private Long bookId;
+    private String bookIsbn;
     private String status;
     private LocalDateTime orderTimestamp;
     private LocalDateTime returnTimestamp;

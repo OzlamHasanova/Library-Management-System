@@ -34,12 +34,6 @@ public class AuthorService {
                 .orElseThrow(() -> new RuntimeException("Author not found with ID: " + id));
     }
 
-
-    public String getAuthorNameById(Long authorId) {
-        Optional<Author> author = authorRepository.findById(authorId);
-        return author.map(Author::getFullName).orElse("Unknown Author");
-    }
-
     public long getAuthorCount() {
         return authorRepository.count();
     }

@@ -10,10 +10,15 @@
     <div class="form-container">
         <h2 class="form-title">Return Order</h2>
 
-        <form th:action="@{/orders/return}" th:object="${order}" method="post">
+        <div th:if="${error}" class="alert alert-danger">
+            <p th:text="${error}"></p>
+        </div>
+
+        <form th:action="@{/orders/return}" method="post">
             <div class="mb-3">
                 <label for="studentSif" class="form-label">Select Student</label>
-                <select class="form-control" id="studentSif" th:field="*{studentSif}" required>
+                <select class="form-control" id="studentSif" name="studentSif" required>
+                    <option value="" disabled selected>Choose Student</option>
                     <option th:each="student : ${students}"
                             th:value="${student.sif}"
                             th:text="${student.fullName}"></option>
@@ -21,24 +26,12 @@
             </div>
 
             <div class="mb-3">
-                <label for="bookId" class="form-label">Select Book</label>
-                <select class="form-control" id="bookId" th:field="*{bookId}" required>
+                <label for="bookIsbn" class="form-label">Select Book</label>
+                <select class="form-control" id="bookIsbn" name="bookIsbn" required>
+                    <option value="" disabled selected>Choose Book</option>
                     <option th:each="book : ${books}"
-                            th:value="${book.id}"
+                            th:value="${book.isbn}"
                             th:text="${book.title}"></option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="fineAmount" class="form-label">Fine Amount</label>
-                <input type="number" class="form-control" id="fineAmount" th:field="*{fineAmount}" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="status" class="form-label">Order Status</label>
-                <select class="form-control" id="status" th:field="*{status}" required>
-                    <option value="RETURNED">Returned</option>
-                    <option value="OVERDUE">Overdue</option>
                 </select>
             </div>
 

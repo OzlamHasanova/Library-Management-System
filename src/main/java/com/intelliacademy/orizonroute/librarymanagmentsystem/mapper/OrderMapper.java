@@ -16,7 +16,7 @@ public class OrderMapper {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setId(order.getId());
         orderDTO.setStudentSif(order.getStudent().getSif());
-        orderDTO.setBookId(order.getBook().getId());
+        orderDTO.setBookIsbn(order.getBook().getIsbn());
         orderDTO.setStatus(order.getStatus().name());
         orderDTO.setOrderTimestamp(order.getOrderTimestamp());
         orderDTO.setReturnTimestamp(order.getReturnTimestamp());

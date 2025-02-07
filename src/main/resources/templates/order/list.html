@@ -68,23 +68,62 @@
         .returned { background-color: #007bff; color: white; }
         .overdue { background-color: #dc3545; color: white; }
 
-        .btn-custom {
-            font-size: 0.9rem;
-            padding: 8px 12px;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: white;
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
         }
 
-        .btn-approve { background: var(--success-color); }
-        .btn-reject { background: var(--danger-color); }
-        .btn-return { background: #007bff; }
+        .btn-create {
+            background: #275232;
+            font-size: 0.9rem; /* Ölçü balacalaşdırıldı */
+            font-weight: bold;
+            padding: 10px 15px;
+            color: white !important;
+            border-radius: 5px;
+        }
+        .btn-create:hover {
+            background: #1e3d26;
+        }
 
-        .btn-approve:hover { background: #1f4324; }
-        .btn-reject:hover { background: #7b1e1e; }
-        .btn-return:hover { background: #0056b3; }
+        .btn-return {
+            background: #ff8c00;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 10px 15px;
+            color: white !important;
+            border-radius: 5px;
+        }
+        .btn-return:hover {
+            background: #e67e00;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            color: white;
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: 5px;
+            background: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .pagination a:hover {
+            background: var(--accent-color);
+        }
+
+        .pagination .active {
+            background: var(--accent-color);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -101,19 +140,18 @@
                 <th>Book</th>
                 <th>Order Time</th>
                 <th>Due Date</th>
-                <th>Status</th>
                 <th>Fine</th>
-                <th>Actions</th>
+                <th>Status</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="order : ${orders}">
                 <td th:text="${order.id}"></td>
                 <td th:text="${order.studentSif}"></td>
-                <td th:text="${order.bookId}"></td>
+                <td th:text="${order.bookIsbn}"></td>
                 <td th:text="${order.orderTimestamp}"></td>
                 <td th:text="${order.dueDate}"></td>
-
+                <td th:text="${order.fineAmount}"></td>
                 <td>
                     <span th:classappend="${order.status == 'APPROVED' ? 'status-badge approved' :
                                           order.status == 'REJECTED' ? 'status-badge rejected' :
@@ -122,24 +160,30 @@
                                           'status-badge overdue'}"
                           th:text="${order.status}"></span>
                 </td>
-
-                <td th:text="${order.fineAmount}"></td>
-
-                <td>
-                    <a th:if="${order.status == 'BORROWED'}"
-                       th:href="@{'/orders/return/' + ${order.id}}" class="btn-custom btn-return">Return</a>
-                    <a th:if="${order.status == 'APPROVED'}"
-                       th:href="@{'/orders/approve/' + ${order.id}}" class="btn-custom btn-approve">Approve</a>
-                    <a th:if="${order.status == 'REJECTED'}"
-                       th:href="@{'/orders/reject/' + ${order.id}}" class="btn-custom btn-reject">Reject</a>
-                </td>
             </tr>
             </tbody>
         </table>
 
-        <div class="text-center mt-3">
-            <a href="/orders/create" class="btn btn-success">Create New Order</a>
+        <div class="btn-container">
+            <a href="/orders/create" class="btn btn-create">Create New Order</a>
+            <a href="/orders/return" class="btn btn-return">Return Order</a>
         </div>
+        <!-- Pagination -->
+        <div class="pagination">
+            <!-- First & Previous Buttons -->
+            <a th:if="${currentPage > 0}" th:href="@{/orders(page=0)}">&laquo; First</a>
+            <a th:if="${currentPage > 0}" th:href="@{/orders(page=${currentPage - 1})}">Previous</a>
+
+            <!-- Page Numbers -->
+            <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:classappend="${currentPage == i} ? 'active'" th:href="@{/orders(page=${i})}" th:text="${i + 1}"></a>
+    </span>
+
+            <!-- Next & Last Buttons -->
+            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/orders(page=${currentPage + 1})}">Next</a>
+            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/orders(page=${totalPages - 1})}">Last &raquo;</a>
+        </div>
+
     </div>
 </div>
 
