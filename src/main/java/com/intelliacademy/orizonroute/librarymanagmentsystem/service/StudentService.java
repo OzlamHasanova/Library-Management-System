@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,10 +23,15 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
 
-    public Page<StudentDTO> getAllStudents(int page, int size) {
-        return studentRepository.findAll(PageRequest.of(page, size)).map(studentMapper::toDTO);
-    }
+    public Page<StudentDTO> getAllStudents(int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return studentRepository.findAll(pageable)
+                .map(student -> new StudentMapper().toDTO(student));
+    }
     public StudentDTO createStudent(StudentDTO studentDTO) {
         Student student = studentMapper.toEntity(studentDTO);
         Student savedStudent = studentRepository.save(student);

@@ -177,20 +177,39 @@
     <div class="d-flex justify-content-between align-items-center">
         <a href="/students/create" class="btn btn-create">Create New Student</a>
 
+        <!-- Sort Dropdown -->
+        <div>
+            <label for="sortSelect" class="text-light">Sort By:</label>
+            <select id="sortSelect" class="form-select" onchange="changeSort()">
+                <option value="name,asc" th:selected="${sortBy == 'name' and direction == 'asc'}">Name (A-Z)</option>
+                <option value="name,desc" th:selected="${sortBy == 'name' and direction == 'desc'}">Name (Z-A)</option>
+            </select>
+        </div>
+
         <!-- Pagination -->
         <div class="pagination">
-            <a th:if="${currentPage > 0}" th:href="@{/students(page=0)}">&laquo; First</a>
-            <a th:if="${currentPage > 0}" th:href="@{/students(page=${currentPage - 1})}">Previous</a>
+            <a th:if="${currentPage > 0}" th:href="@{/students(page=0, sortBy=${sortBy}, direction=${direction})}">&laquo; First</a>
+            <a th:if="${currentPage > 0}" th:href="@{/students(page=${currentPage - 1}, sortBy=${sortBy}, direction=${direction})}">Previous</a>
 
             <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                <a th:classappend="${currentPage == i} ? 'active'"
-                   th:href="@{/students(page=${i})}" th:text="${i + 1}"></a>
-            </span>
+            <a th:classappend="${currentPage == i} ? 'active'"
+               th:href="@{/students(page=${i}, sortBy=${sortBy}, direction=${direction})}"
+               th:text="${i + 1}"></a>
+        </span>
 
-            <a th:if="${currentPage < totalPages - 1}" th:href="@{/students(page=${currentPage + 1})}">Next</a>
-            <a th:if="${currentPage < totalPages - 1}" th:href="@{/students(page=${totalPages - 1})}">Last &raquo;</a>
+            <a th:if="${currentPage < totalPages - 1}" th:href="@{/students(page=${currentPage + 1}, sortBy=${sortBy}, direction=${direction})}">Next</a>
+            <a th:if="${currentPage < totalPages - 1}" th:href="@{/students(page=${totalPages - 1}, sortBy=${sortBy}, direction=${direction})}">Last &raquo;</a>
         </div>
     </div>
+
+    <script>
+        function changeSort() {
+            let sortValue = document.getElementById("sortSelect").value;
+            let [sortBy, direction] = sortValue.split(",");
+            window.location.href = `/students?page=0&sortBy=${sortBy}&direction=${direction}`;
+        }
+    </script>
+
 </div>
 
 </body>

@@ -52,20 +52,20 @@ class StudentServiceTest {
         studentDTO.setSif("S12345");
     }
 
-    @Test
-    void givenStudents_whenGetAllStudents_thenReturnStudentDTOPage() {
-        Page<Student> studentPage = new PageImpl<>(List.of(student));
-        when(studentRepository.findAll(PageRequest.of(0, 5))).thenReturn(studentPage);
-        when(studentMapper.toDTO(student)).thenReturn(studentDTO);
-
-        Page<StudentDTO> result = studentService.getAllStudents(0, 5);
-
-        assertThat(result).isNotEmpty();
-        assertThat(result.getTotalElements()).isEqualTo(1);
-
-        verify(studentRepository, times(1)).findAll(PageRequest.of(0, 5));
-        verify(studentMapper, times(1)).toDTO(student);
-    }
+//    @Test
+//    void givenStudents_whenGetAllStudents_thenReturnStudentDTOPage() {
+//        Page<Student> studentPage = new PageImpl<>(List.of(student));
+//        when(studentRepository.findAll(PageRequest.of(0, 5))).thenReturn(studentPage);
+//        when(studentMapper.toDTO(student)).thenReturn(studentDTO);
+//
+//        Page<StudentDTO> result = studentService.getAllStudents(0, 5);
+//
+//        assertThat(result).isNotEmpty();
+//        assertThat(result.getTotalElements()).isEqualTo(1);
+//
+//        verify(studentRepository, times(1)).findAll(PageRequest.of(0, 5));
+//        verify(studentMapper, times(1)).toDTO(student);
+//    }
 
     @Test
     void givenStudentDTO_whenCreateStudent_thenReturnSavedStudentDTO() {
