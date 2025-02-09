@@ -1,7 +1,9 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.service;
 
+import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.CategoryDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.CategoryNotFoundException;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.BookMapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Category;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.CategoryRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final BookMapper bookMapper;
 
     public List<CategoryDTO> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
@@ -57,9 +61,18 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
-    public Set<Book> getCategoryBooks(Long id) {
+    public Set<BookDTO> getCategoryBooks(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
-        return category.getBooks();
+        Set<BookDTO> bookDTOs = category.getBooks().stream()
+                .map(bookMapper::toBookDTO)
+                .collect(Collectors.toSet());
+
+        // ✅ Debug üçün konsola müəllifləri çıxardırıq
+        bookDTOs.forEach(book -> System.out.println("Book: " + book.getTitle() + " | Authors: " + book.getAuthorNames()));
+
+        return bookDTOs;
     }
+
+
 }

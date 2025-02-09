@@ -41,7 +41,7 @@ public class OrderController {
     public String showCreateOrderForm(Model model) {
         model.addAttribute("order", new OrderDTO());
         model.addAttribute("students", studentService.getStudentList());
-        model.addAttribute("books", bookService.getAllBooks());
+        model.addAttribute("books", bookService.getAllBookList());
         return "order/create";
     }
 
@@ -49,7 +49,7 @@ public class OrderController {
     public String showReturnOrderForm(Model model) {
         model.addAttribute("order", new OrderDTO());
         model.addAttribute("students", studentService.getStudentList());
-        model.addAttribute("books", bookService.getAllBooks());
+        model.addAttribute("books", bookService.getAllBookList());
         return "order/return";
     }
 
@@ -69,7 +69,7 @@ public class OrderController {
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("students", studentService.getStudentList());
-            model.addAttribute("books", bookService.getAllBooks());
+            model.addAttribute("books", bookService.getAllBookList());
             return "order/return";
         }
     }

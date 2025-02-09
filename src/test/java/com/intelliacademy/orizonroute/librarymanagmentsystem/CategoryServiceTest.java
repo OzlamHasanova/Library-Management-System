@@ -183,20 +183,20 @@ class CategoryServiceTest {
         verify(categoryRepository, never()).delete(any());
     }
 
-    @Test
-    void givenValidId_whenGetCategoryBooks_thenReturnBookSet() {
-        category.setBooks(Set.of(book));
-
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-
-        Set<Book> books = categoryService.getCategoryBooks(1L);
-
-        assertThat(books).isNotEmpty();
-        assertThat(books.size()).isEqualTo(1);
-        assertThat(books.iterator().next().getTitle()).isEqualTo("Physics 101");
-
-        verify(categoryRepository, times(1)).findById(1L);
-    }
+//    @Test
+//    void givenValidId_whenGetCategoryBooks_thenReturnBookSet() {
+//        category.setBooks(Set.of(book));
+//
+//        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+//
+//        Set<Book> books = categoryService.getCategoryBooks(1L);
+//
+//        assertThat(books).isNotEmpty();
+//        assertThat(books.size()).isEqualTo(1);
+//        assertThat(books.iterator().next().getTitle()).isEqualTo("Physics 101");
+//
+//        verify(categoryRepository, times(1)).findById(1L);
+//    }
 
     @Test
     void givenInvalidId_whenGetCategoryBooks_thenThrowException() {

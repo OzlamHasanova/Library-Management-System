@@ -21,7 +21,7 @@ public class WebsiteController {
 
     @GetMapping("/books")
     public String showAllBooks(Model model) {
-        model.addAttribute("books", bookService.getAllBooks());
+        model.addAttribute("books", bookService.getAllBookList());
         model.addAttribute("categories", categoryService.getAllCategories());
         return "website/books"; // website/books.html
     }

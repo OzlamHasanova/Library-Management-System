@@ -17,7 +17,7 @@ public class BookDTO {
     private String availability;
     private String image;
     private Long stock;
-    private Set<Long> authorIds;
+    private Set<Long> authorIds = new HashSet<>();
     private Set<String> authorNames = new HashSet<>();
     private Long categoryId;
     private String categoryName;

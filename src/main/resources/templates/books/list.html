@@ -9,8 +9,8 @@
         :root {
             --primary-color: #242440;
             --secondary-color: #4F5D75;
-            --accent-color: #8B4513;
-            --gradient-1: linear-gradient(135deg, #69462B, #8B4513);
+            --accent-color: #D2691E;
+            --gradient-1: linear-gradient(135deg, #8B5E3C, #D2691E);
             --gradient-2: linear-gradient(135deg, #2D3142, #4F5D75);
             --text-light: #F4EBD0;
             --card-bg: rgba(36, 36, 64, 0.95);
@@ -20,6 +20,36 @@
             background: var(--primary-color);
             color: var(--text-light);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h2 {
+            color: var(--accent-color) !important;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            color: white;
+            padding: 6px 12px;
+            margin: 0 3px;
+            border-radius: 5px;
+            background: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .pagination a:hover {
+            background: var(--accent-color);
+        }
+
+        .pagination .active {
+            background: var(--accent-color);
+            font-weight: bold;
         }
 
         .book-card {
@@ -40,14 +70,6 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
         }
 
-        .book-image {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 10px;
-            background: var(--secondary-color);
-        }
-
         .book-title {
             font-size: 1.3rem;
             font-weight: bold;
@@ -55,27 +77,12 @@
             margin-top: 10px;
         }
 
-        .book-details {
-            font-size: 0.9rem;
-            color: #ccc;
-            margin-top: 5px;
-        }
-
-        .availability {
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-
-        .available {
-            background-color: #275232;
-            color: white;
-        }
-
-        .unavailable {
-            background-color: #dc3545;
-            color: white;
+        .book-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: var(--secondary-color);
         }
 
         .action-buttons a,
@@ -88,13 +95,14 @@
             transition: 0.3s;
         }
 
+        /* Düymə Rəngləri */
         .action-buttons .btn-view {
             background: var(--gradient-1);
             color: var(--text-light);
         }
 
         .action-buttons .btn-view:hover {
-            background: #8B4513;
+            background: #A0522D;
         }
 
         .action-buttons .btn-edit {
@@ -128,9 +136,10 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2 class="text-center text-primary" style="color: #8B4513">Library Books</h2>
+    <h2 class="text-center">Library Books</h2>
+
     <div class="text-end mb-3">
-        <a href="/books/new" class="btn btn-success" style="color: #275232">Add New Book</a>
+        <a href="/books/new" class="btn btn-success" style="color: #F4EBD0">Add New Book</a>
     </div>
 
     <div class="row row-cols-1 row-cols-md-4 g-4">
@@ -140,27 +149,11 @@
                 <span th:unless="${book.image != null and book.image != ''}" class="book-image d-flex align-items-center justify-content-center">No Image</span>
 
                 <div class="book-title" th:text="${book.title}"></div>
+                <div class="book-details" th:text="'Year: ' + ${book.publicationYear}"></div>
+                <div class="book-details" th:text="'Stock: ' + ${book.stock}"></div>
+                <div class="book-details" th:text="'Category: ' + ${book.categoryName}"></div>
 
-                <div class="book-details">
-                    <span th:text="'Year: ' + ${book.publicationYear}"></span><br>
-                    <span th:text="'Stock: ' + ${book.stock}"></span>
-                </div>
-
-                <div class="book-details">
-                    <span th:text="'Category: ' + ${book.categoryName}"></span>
-                </div>
-
-
-                <div class="availability mt-2" th:classappend="${book.availability == 'AVAILABLE' ? 'available' : 'unavailable'}"
-                     th:text="${book.availability}">
-                </div>
-
-                <div class="book-details mt-2">
-                    <strong>Authors:</strong>
-                    <ul class="list-unstyled">
-                        <li th:each="author : ${book.authorNames}" th:text="${author}"></li>
-                    </ul>
-                </div>
+                <div class="availability mt-2" th:classappend="${book.availability == 'AVAILABLE' ? 'available' : 'unavailable'}" th:text="${book.availability}"></div>
 
                 <div class="action-buttons mt-2">
                     <a th:href="@{'/books/' + ${book.id}}" class="btn btn-view">View</a>
@@ -171,6 +164,19 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <a th:if="${currentPage > 1}" th:href="@{/books(page=1)}">&laquo; First</a>
+        <a th:if="${currentPage > 1}" th:href="@{/books(page=${currentPage - 1})}">Previous</a>
+
+        <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+            <a th:classappend="${currentPage == i} ? 'active'" th:href="@{/books(page=${i})}" th:text="${i}"></a>
+        </span>
+
+        <a th:if="${currentPage < totalPages}" th:href="@{/books(page=${currentPage + 1})}">Next</a>
+        <a th:if="${currentPage < totalPages}" th:href="@{/books(page=${totalPages})}">Last &raquo;</a>
     </div>
 </div>
 </body>

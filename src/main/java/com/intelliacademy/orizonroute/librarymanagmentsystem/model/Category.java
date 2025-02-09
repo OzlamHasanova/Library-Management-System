@@ -23,6 +23,8 @@ public class Category {
 
     private String name;
 
+//    private String description; todo delete id and add description
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Book> books = new HashSet<>();
 }

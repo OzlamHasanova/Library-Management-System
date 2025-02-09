@@ -7,6 +7,7 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CloudinaryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +26,18 @@ public class BookController {
     private final CloudinaryService cloudinaryService;
 
     @GetMapping
-    public String listBooks(Model model) {
-        List<BookDTO> books = bookService.getAllBooks();
-        model.addAttribute("books", books);
+    public String listBooks(@RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "8") int size,
+                            Model model) {
+        Page<BookDTO> bookPage = bookService.getAllBooks(page, size);
+
+        model.addAttribute("books", bookPage.getContent());
+        model.addAttribute("currentPage", bookPage.getNumber());
+        model.addAttribute("totalPages", bookPage.getTotalPages());
+
         return "books/list";
     }
+
 
     @GetMapping("/new")
     public String showCreateBookForm(Model model) {

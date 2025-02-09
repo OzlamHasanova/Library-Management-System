@@ -7,6 +7,9 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Category;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +25,19 @@ public class BookService {
     private final AuthorService authorService;
     private final CategoryService categoryService;
 
-    public List<BookDTO> getAllBooks() {
-        List<Book> books = bookRepository.findByIsDeletedFalse();
-        return books.stream()
-                .map(bookMapper::toBookDTO)
-                .collect(Collectors.toList());
+    public Page<BookDTO> getAllBooks(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Book> bookPage = bookRepository.findByIsDeletedFalse(pageable);
+
+        return bookPage.map(bookMapper::toBookDTO);
     }
+
+    public List<BookDTO> getAllBookList() {
+        List<Book> bookList = bookRepository.findByIsDeletedFalse();
+
+        return bookList.stream().map(bookMapper::toBookDTO).toList();
+    }
+
 
     @Transactional
     public BookDTO createBook(BookDTO bookDTO) {

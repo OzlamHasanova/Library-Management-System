@@ -3,30 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <title>Categories List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #242440;
+            --secondary-color: #4F5D75;
+            --accent-color: #D2691E;
+            --text-light: #F4EBD0;
+            --table-bg: rgba(36, 36, 64, 0.98);
+            --page-light: #F8F1E5;
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --shadow-light: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: var(--primary-color);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* 📖 Kitab Görünüşü */
+        .book-frame {
+            width: 950px;
+            height: 650px;
+            background: var(--table-bg);
+            position: relative;
+            border-radius: 10px;
+            box-shadow: 10px 10px 30px var(--shadow-dark), -10px -10px 30px var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* 📄 Real Səhifə Effekti */
+        .book-frame::before, .book-frame::after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            width: 50px;
+            height: 97%;
+            background: var(--page-light);
+            box-shadow: inset 3px 0 8px rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        .book-frame::before {
+            left: 5px;
+            border-radius: 10px 0 0 10px;
+        }
+
+        .book-frame::after {
+            right: 5px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* 📄 Səhifənin qırış effekti */
+        .book-frame::before, .book-frame::after {
+            background: linear-gradient(180deg, #F8F1E5 5%, #E0D7C9 50%, #F8F1E5 95%);
+        }
+
+        /* 📑 İçəridəki əsas hissə */
+        .content {
+            width: 85%;
+            height: 85%;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: inset 3px 3px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: var(--secondary-color);
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-custom {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-view { background: linear-gradient(135deg, #8B5E3C, #D2691E); }
+        .btn-edit { background: linear-gradient(135deg, #2D3142, #4F5D75); }
+        .btn-delete { background: #8B0000; }
+        .btn-show-books { background: #008080; }
+
+        .btn-view:hover { background: #A0522D; }
+        .btn-edit:hover { background: #4F5D75; }
+        .btn-delete:hover { background: #B22222; }
+        .btn-show-books:hover { background: #005757; }
+
+        .btn-add {
+            background: #275232;
+            font-size: 1rem;
+            padding: 10px 15px;
+            color: white !important;
+        }
+
+        .btn-add:hover {
+            background: #1E3D26;
+        }
+
+    </style>
 </head>
 <body>
-<h1>Categories</h1>
-<a href="/categories/new">Create New Category</a>
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="category : ${categories}">
-        <td th:text="${category.id}"></td>
-        <td th:text="${category.name}"></td>
-        <td>
-            <a th:href="@{/categories/{id}(id=${category.id})}">View</a> |
-            <a th:href="@{/categories/edit/{id}(id=${category.id})}">Edit</a> |
-            <a th:href="@{/categories/delete/{id}(id=${category.id})}" onclick="return confirm('Are you sure?');">Delete</a> |
-            <a th:href="@{/categories/{id}/books(id=${category.id})}">Show Books</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+
+<div class="book-frame">
+    <div class="content">
+        <h1>Categories</h1>
+
+        <div class="text-end mb-3">
+            <a href="/categories/new" class="btn btn-add">Create New Category</a>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="category : ${categories}">
+                <td th:text="${category.id}"></td>
+                <td th:text="${category.name}"></td>
+                <td>
+                    <a th:href="@{/categories/{id}(id=${category.id})}" class="btn-custom btn-view">View</a>
+                    <a th:href="@{/categories/edit/{id}(id=${category.id})}" class="btn-custom btn-edit">Edit</a>
+                    <a th:href="@{/categories/delete/{id}(id=${category.id})}" class="btn-custom btn-delete" onclick="return confirm('Are you sure?');">Delete</a>
+                    <a th:href="@{/categories/{id}/books(id=${category.id})}" class="btn-custom btn-show-books">Show Books</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 </body>
 </html>

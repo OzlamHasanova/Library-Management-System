@@ -1,5 +1,6 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
+import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.CategoryDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
@@ -63,9 +64,10 @@ public class CategoryController {
 
     @GetMapping("/{id}/books")
     public String showCategoryBooks(@PathVariable Long id, Model model) {
-        Set<Book> books = categoryService.getCategoryBooks(id);
+        Set<BookDTO> books = categoryService.getCategoryBooks(id);
         model.addAttribute("books", books);
         model.addAttribute("category", categoryService.getCategoryById(id));
         return "category/books";
     }
+
 }
