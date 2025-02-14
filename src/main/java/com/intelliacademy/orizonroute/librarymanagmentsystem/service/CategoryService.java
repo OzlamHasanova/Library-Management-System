@@ -1,14 +1,16 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.service;
 
+import com.intelliacademy.orizonroute.librarymanagmentsystem.common.ErrorMessages;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.CategoryDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.CategoryNotFoundException;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.BookMapper;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.CategoryMapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Category;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.CategoryRepository;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,15 +32,20 @@ public class CategoryService {
                 .toList();
     }
 
+    public Page<CategoryDTO> getCategories(Pageable pageable) {
+        Page<Category> categoryPage = categoryRepository.findAll(pageable);
+        return categoryPage.map(categoryMapper::toCategoryDTO);
+    }
+
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         Category category = categoryMapper.toCategory(categoryDTO);
         Category savedCategory = categoryRepository.save(category);
-        return categoryMapper.toCategoryDTO(savedCategory); // Use MapStruct mapper
+        return categoryMapper.toCategoryDTO(savedCategory);
     }
 
     public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
         category.setName(categoryDTO.getName());
         Category updatedCategory = categoryRepository.save(category);
         return categoryMapper.toCategoryDTO(updatedCategory);
@@ -46,33 +53,27 @@ public class CategoryService {
 
     public CategoryDTO getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
         return categoryMapper.toCategoryDTO(category);
     }
 
     public Category getCategoryEntityById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
     }
 
     public void deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
         categoryRepository.delete(category);
     }
 
     public Set<BookDTO> getCategoryBooks(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
-        Set<BookDTO> bookDTOs = category.getBooks().stream()
+                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
+
+        return category.getBooks().stream()
                 .map(bookMapper::toBookDTO)
                 .collect(Collectors.toSet());
-
-        // ✅ Debug üçün konsola müəllifləri çıxardırıq
-        bookDTOs.forEach(book -> System.out.println("Book: " + book.getTitle() + " | Authors: " + book.getAuthorNames()));
-
-        return bookDTOs;
     }
-
-
 }

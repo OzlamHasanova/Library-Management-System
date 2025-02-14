@@ -28,8 +28,9 @@ public class BookController {
     @GetMapping
     public String listBooks(@RequestParam(defaultValue = "0") int page,
                             @RequestParam(defaultValue = "8") int size,
+                            @RequestParam(defaultValue = "title") String sortBy,
                             Model model) {
-        Page<BookDTO> bookPage = bookService.getAllBooks(page, size);
+        Page<BookDTO> bookPage = bookService.getAllBooks(page, size, sortBy);
 
         model.addAttribute("books", bookPage.getContent());
         model.addAttribute("currentPage", bookPage.getNumber());

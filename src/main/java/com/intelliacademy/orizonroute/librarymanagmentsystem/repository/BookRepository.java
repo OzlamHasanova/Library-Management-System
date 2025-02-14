@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    List<Book> findByCategory_Id(Long categoryId);
+    List<Book> findAllByCategory_Id(Long categoryId);
 
     Page<Book> findByIsDeletedFalse(Pageable pageable);
 

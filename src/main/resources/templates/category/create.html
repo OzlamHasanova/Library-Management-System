@@ -77,6 +77,12 @@
             <input type="text" th:field="*{name}" class="form-control" required />
         </div>
 
+        <div class="mb-3">
+            <label class="form-label">Category Description</label>
+            <input type="text" th:field="*{description}" class="form-control" required />
+        </div>
+
+
         <button type="submit" class="btn btn-custom btn-save">Create</button>
         <a href="/categories" class="btn btn-custom btn-back">Back to List</a>
     </form>

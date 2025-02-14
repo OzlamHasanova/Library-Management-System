@@ -1,5 +1,6 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.service;
 
+import com.intelliacademy.orizonroute.librarymanagmentsystem.common.ErrorMessages;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.StudentDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.StudentNotFoundException;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.StudentMapper;
@@ -14,10 +15,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StudentService {
 
     private final StudentRepository studentRepository;
@@ -32,6 +33,7 @@ public class StudentService {
         return studentRepository.findAll(pageable)
                 .map(student -> new StudentMapper().toDTO(student));
     }
+
     public StudentDTO createStudent(StudentDTO studentDTO) {
         Student student = studentMapper.toEntity(studentDTO);
         Student savedStudent = studentRepository.save(student);
@@ -40,7 +42,7 @@ public class StudentService {
 
     public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
         Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
         student.setName(studentDTO.getName());
         student.setSurname(studentDTO.getSurname());
         student.setSif(studentDTO.getSif());
@@ -50,14 +52,14 @@ public class StudentService {
 
     public void deleteStudent(Long id) {
         Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
         student.setDeleted(true);
         studentRepository.save(student);
     }
 
     public StudentDTO findStudentById(Long id) {
         return studentRepository.findById(id).map(studentMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
     }
 
     public List<StudentDTO> getStudentList() {

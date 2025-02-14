@@ -1,5 +1,6 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.service;
 
+import com.intelliacademy.orizonroute.librarymanagmentsystem.common.ErrorMessages;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.OrderDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.BookNotFoundException;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.OrderNotFoundException;
@@ -13,7 +14,6 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.BookRepo
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.OrderRepository;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,12 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -42,12 +39,12 @@ public class OrderService {
     @Transactional
     public OrderDTO createOrder(String sif, String bookIsbn) {
         Student student = studentRepository.findBySif(sif)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
         Book book = bookRepository.findBookByIsbn(bookIsbn)
-                .orElseThrow(() -> new BookNotFoundException("Book not found"));
+                .orElseThrow(() -> new BookNotFoundException(ErrorMessages.BOOK_NOT_FOUND));
 
         if (book.getStock() <= 0) {
-            throw new RuntimeException("Book is out of stock");
+            throw new RuntimeException(ErrorMessages.BOOK_OUT_OF_STOCK);
         }
 
         book.setStock(book.getStock() - 1);
@@ -66,18 +63,16 @@ public class OrderService {
 
     @Transactional
     public OrderDTO returnOrder(String studentSif, String bookIsbn) {
-
         Student student = studentRepository.findBySif(studentSif)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found with SIF: " + studentSif));
+                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
 
         Book book = bookRepository.findBookByIsbn(bookIsbn)
-                .orElseThrow(() -> new BookNotFoundException("Book not found with ISBN: " + bookIsbn));
+                .orElseThrow(() -> new BookNotFoundException(ErrorMessages.BOOK_NOT_FOUND));
 
         Order order = orderRepository.findByStudentSif(studentSif).stream()
                 .filter(o -> o.getBook().getIsbn().equals(bookIsbn) && !o.isReturned())
                 .findFirst()
-                .orElseThrow(() -> new OrderNotFoundException("No active order found for this student and book."));
-
+                .orElseThrow(() -> new OrderNotFoundException(ErrorMessages.ORDER_NOT_FOUND_ACTIVE));
 
         book.setStock(book.getStock() + 1);
         bookRepository.save(book);
@@ -96,9 +91,8 @@ public class OrderService {
         return orderMapper.toDTO(savedOrder);
     }
 
-
     public OrderDTO getOrderById(Long orderId) {
         return orderMapper.toDTO(orderRepository.findById(orderId)
-                .orElseThrow(()-> new OrderNotFoundException("Order not found")));
+                .orElseThrow(() -> new OrderNotFoundException(ErrorMessages.ORDER_NOT_FOUND)));
     }
 }
