@@ -37,9 +37,10 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDTO createOrder(String sif, String bookIsbn) {
+    public OrderDTO createOrder(String sif, String bookIsbn, String dueDate, String notes) {
         Student student = studentRepository.findBySif(sif)
                 .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
+
         Book book = bookRepository.findBookByIsbn(bookIsbn)
                 .orElseThrow(() -> new BookNotFoundException(ErrorMessages.BOOK_NOT_FOUND));
 
@@ -55,15 +56,17 @@ public class OrderService {
         order.setBook(book);
         order.setStatus(OrderStatus.BORROWED);
         order.setOrderTimestamp(LocalDateTime.now());
-        order.setDueDate(LocalDateTime.now().plusWeeks(2));
+        order.setDueDate(LocalDateTime.parse(dueDate + "T23:59:59"));
+        order.setNotes(notes);
 
         Order savedOrder = orderRepository.save(order);
         return orderMapper.toDTO(savedOrder);
     }
 
+
     @Transactional
     public OrderDTO returnOrder(String studentSif, String bookIsbn) {
-        Student student = studentRepository.findBySif(studentSif)
+        studentRepository.findBySif(studentSif)
                 .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
 
         Book book = bookRepository.findBookByIsbn(bookIsbn)

@@ -2,11 +2,108 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Return Order</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #242440;
+            --secondary-color: #4F5D75;
+            --accent-color: #8B4513;
+            --form-bg: rgba(36, 36, 64, 0.98);
+            --success-color: #275232;
+            --danger-color: #9c2626;
+        }
+
+        body {
+            background: var(--primary-color);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: var(--form-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: white;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--secondary-color);
+            color: white;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(139, 69, 19, 0.5);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn-return {
+            background: var(--success-color);
+            color: white;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+            width: 48%;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .btn-return:hover {
+            background: #1f4324;
+        }
+
+        .btn-cancel {
+            background: var(--danger-color);
+            color: white;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+            width: 48%;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: #7b1e1e;
+        }
+
+        .alert-danger {
+            background: rgba(156, 38, 38, 0.9);
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container mt-5">
+<div class="container">
     <div class="form-container">
         <h2 class="form-title">Return Order</h2>
 
@@ -15,6 +112,8 @@
         </div>
 
         <form th:action="@{/orders/return}" method="post">
+
+            <!-- Student Selection -->
             <div class="mb-3">
                 <label for="studentSif" class="form-label">Select Student</label>
                 <select class="form-control" id="studentSif" name="studentSif" required>
@@ -25,6 +124,7 @@
                 </select>
             </div>
 
+            <!-- Book Selection -->
             <div class="mb-3">
                 <label for="bookIsbn" class="form-label">Select Book</label>
                 <select class="form-control" id="bookIsbn" name="bookIsbn" required>
@@ -35,9 +135,9 @@
                 </select>
             </div>
 
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-success">Return Order</button>
-                <a href="/orders" class="btn btn-secondary">Cancel</a>
+            <div class="btn-container">
+                <button type="submit" class="btn btn-return">Return Order</button>
+                <a href="/orders" class="btn btn-cancel">Cancel</a>
             </div>
         </form>
     </div>

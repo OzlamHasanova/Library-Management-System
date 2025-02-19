@@ -39,14 +39,15 @@ public class Book {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST,
+            CascadeType.MERGE},
+            fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_author",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private Set<Author> authors = new HashSet<>();
-
 
     @ManyToOne
     @JoinColumn(

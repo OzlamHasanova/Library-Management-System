@@ -29,10 +29,15 @@
         }
 
         .header-title {
-            text-align: center;
             font-size: 2rem;
             font-weight: bold;
             color: var(--accent-color);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
         }
 
@@ -49,6 +54,27 @@
         .btn-add:hover {
             background: #ff7f50;
             color: white;
+        }
+
+        .btn-admin {
+            background: var(--secondary-bg);
+            color: white;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-admin:hover {
+            background: var(--btn-edit);
+        }
+
+        .admin-icon {
+            font-size: 1.2rem;
         }
 
         .author-list {
@@ -134,7 +160,12 @@
 <body>
 
 <div class="container">
-    <h2 class="header-title">Authors</h2>
+    <div class="top-bar">
+        <h2 class="header-title">Authors</h2>
+        <a href="/admin" class="btn btn-admin">
+            <span class="admin-icon">⚙</span> Admin Panel <span class="admin-icon">↩</span>
+        </a>
+    </div>
 
     <div class="text-end mb-3">
         <a class="btn btn-add" href="/authors/new">Add New Author</a>
@@ -152,10 +183,7 @@
 
             <div class="action-buttons">
                 <a th:href="@{/authors/edit/{id}(id=${author.id})}" class="btn btn-edit">Edit</a>
-<!--                <a th:href="@{/authors/delete/{id}(id=${author.id})}" class="btn btn-delete">Delete</a>-->
-                <form th:action="@{/authors/delete/{id}(id=${author.id})}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-delete">Delete</button>
-                </form>
+                <a th:href="@{/authors/delete/{id}(id=${author.id})}" class="btn btn-delete">Delete</a>
             </div>
         </div>
     </div>

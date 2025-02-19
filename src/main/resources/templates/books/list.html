@@ -22,6 +22,34 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-admin {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-admin:hover {
+            background: var(--accent-color);
+        }
+
+        .admin-icon {
+            font-size: 1.2rem;
+        }
+
         h2 {
             color: var(--accent-color) !important;
         }
@@ -136,7 +164,12 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2 class="text-center">Library Books</h2>
+    <div class="top-bar">
+        <h2 class="text-center">Library Books</h2>
+        <a href="/admin" class="btn btn-admin">
+            <span class="admin-icon">⚙</span> Admin Panel <span class="admin-icon">↩</span>
+        </a>
+    </div>
 
     <div class="text-end mb-3">
         <a href="/books/new" class="btn btn-success" style="color: #F4EBD0">Add New Book</a>

@@ -21,7 +21,9 @@ public class Author {
     private LocalDate deathDate;
     private String biography;
 
-    @ManyToMany(mappedBy = "authors", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "authors",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY)
     private Set<Book> books = new HashSet<>();
 
 }

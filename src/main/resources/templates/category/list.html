@@ -28,7 +28,6 @@
             height: 100vh;
         }
 
-        /* 📖 Kitab Görünüşü */
         .book-frame {
             width: 950px;
             height: 650px;
@@ -42,7 +41,6 @@
             overflow: hidden;
         }
 
-        /* 📄 Real Səhifə Effekti */
         .book-frame::before, .book-frame::after {
             content: "";
             position: absolute;
@@ -64,12 +62,10 @@
             border-radius: 0 10px 10px 0;
         }
 
-        /* 📄 Səhifənin qırış effekti */
         .book-frame::before, .book-frame::after {
             background: linear-gradient(180deg, #F8F1E5 5%, #E0D7C9 50%, #F8F1E5 95%);
         }
 
-        /* 📑 İçəridəki əsas hissə */
         .content {
             width: 85%;
             height: 85%;
@@ -148,14 +144,12 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>ID</th>
                 <th>Name</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="category : ${categories}">
-                <td th:text="${category.id}"></td>
                 <td th:text="${category.name}"></td>
                 <td>
                     <a th:href="@{/categories/{id}(id=${category.id})}" class="btn-custom btn-view">View</a>

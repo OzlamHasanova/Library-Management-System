@@ -5,6 +5,7 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -38,7 +39,7 @@ public class AuthorMapper {
 
     public List<AuthorDTO> toAuthorDTOList(List<Author> authors) {
         if (authors == null || authors.isEmpty()) {
-            return List.of(); // Boş siyahı qaytarır
+            return List.of();
         }
         return authors.stream()
                 .map(this::toAuthorDTO)

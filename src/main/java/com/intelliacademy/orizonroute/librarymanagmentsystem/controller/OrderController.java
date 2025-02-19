@@ -54,10 +54,22 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public String createOrder(@ModelAttribute("order") OrderDTO orderDTO) {
-        orderService.createOrder(orderDTO.getStudentSif(), orderDTO.getBookIsbn());
-        return "redirect:/orders";
+    public String createOrder(@RequestParam("studentSif") String studentSif,
+                              @RequestParam("bookIsbn") String bookIsbn,
+                              @RequestParam("dueDate") String dueDate,
+                              @RequestParam(value = "notes", required = false) String notes,
+                              Model model) {
+        try {
+            orderService.createOrder(studentSif, bookIsbn, dueDate, notes);
+            return "redirect:/orders";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("students", studentService.getStudentList());
+            model.addAttribute("books", bookService.getAllBookList());
+            return "order/create";
+        }
     }
+
 
     @PostMapping("/return")
     public String returnOrder(@RequestParam("studentSif") String studentSif,
