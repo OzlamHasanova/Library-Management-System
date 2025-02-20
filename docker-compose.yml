@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: librarydb
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  app:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8088:8085"
+    networks:
+      - backend
+
+networks:
+  backend:
