@@ -4,6 +4,7 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,5 +19,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByIsDeletedFalse();
 
     Optional<Book> findBookByIsbn(String isbn);
+
+    @Query("SELECT COUNT(b) FROM Book b WHERE b.stock > 0 AND b.isDeleted = false")
+    Long countAvailableBooks();
+
 
 }

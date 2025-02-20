@@ -14,4 +14,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByStudentSif(String sif);
 
     List<Order> findAllByStatusAndDueDateBefore(OrderStatus status, LocalDateTime dueDate);
+
+    Long countByStatus(OrderStatus orderStatus);
 }

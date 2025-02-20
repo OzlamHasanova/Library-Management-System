@@ -28,7 +28,7 @@
         .login-container h2 {
             margin-bottom: 30px;
             font-weight: 600;
-            color: #007bff; /* Mavi başlıq */
+            color: #007bff;
         }
         .form-control {
             padding: 12px;
@@ -48,16 +48,6 @@
         .alert {
             margin-top: 20px;
         }
-        .forgot-password {
-            color: #007bff;
-            font-size: 14px;
-            text-decoration: none;
-            display: block;
-            margin-top: 10px;
-        }
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -68,20 +58,31 @@
 <body>
 <div class="login-container">
     <h2>Admin Login</h2>
+    <!-- Login form -->
     <form th:action="@{/login}" th:object="${userDto}" method="post">
+        <!-- Username Field -->
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" th:field="*{username}" required placeholder="Enter your username">
+            <input type="text" class="form-control" id="username" th:field="*{username}" name="username" required placeholder="Enter your username">
         </div>
+
+        <!-- Password Field -->
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" th:field="*{password}" required placeholder="Enter your password">
+            <input type="password" class="form-control" id="password" th:field="*{password}" name="password" required placeholder="Enter your password">
         </div>
+
+        <!-- Submit Button -->
         <button type="submit" class="btn btn-primary">Login</button>
-        <div th:if="${param.error}" class="alert alert-danger">
-            Invalid username or password.
-        </div>
+
+<!--        &lt;!&ndash; Error Message &ndash;&gt;-->
+<!--        <div th:if="${param.error}" class="alert alert-danger">-->
+<!--            Invalid username or password.-->
+<!--        </div>-->
+
     </form>
+
+    <!-- Footer -->
     <div class="footer">
         <p>&copy; 2025 Library Management System</p>
     </div>

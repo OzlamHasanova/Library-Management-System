@@ -37,6 +37,10 @@ public class BookService {
         return bookList.stream().map(bookMapper::toBookDTO).toList();
     }
 
+    public Long getAvailableBookCount() {
+        return bookRepository.countAvailableBooks();
+    }
+
     @Transactional
     public BookDTO createBook(BookDTO bookDTO) {
         Category category = categoryService.getCategoryEntityById(bookDTO.getCategoryId());

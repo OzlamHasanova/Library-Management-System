@@ -36,6 +36,10 @@ public class OrderService {
         return orders.map(orderMapper::toDTO);
     }
 
+    public Long getBorrowedOrdersCount() {
+        return orderRepository.countByStatus(OrderStatus.BORROWED);
+    }
+
     @Transactional
     public OrderDTO createOrder(String sif, String bookIsbn, String dueDate, String notes) {
         Student student = studentRepository.findBySif(sif)

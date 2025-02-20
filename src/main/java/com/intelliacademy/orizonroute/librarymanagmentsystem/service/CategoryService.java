@@ -32,6 +32,10 @@ public class CategoryService {
                 .toList();
     }
 
+    public Long getCategoryCount() {
+        return categoryRepository.count();
+    }
+
     public Page<CategoryDTO> getCategories(Pageable pageable) {
         Page<Category> categoryPage = categoryRepository.findAll(pageable);
         return categoryPage.map(categoryMapper::toCategoryDTO);

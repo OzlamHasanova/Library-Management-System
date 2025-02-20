@@ -50,7 +50,7 @@ public class AuthorService {
                 .orElseThrow(() -> new AuthorNotFoundException(ErrorMessages.AUTHOR_NOT_FOUND_WITH_ID + id));
     }
 
-    public long getAuthorCount() {
+    public Long getAuthorCount() {
         return authorRepository.count();
     }
 

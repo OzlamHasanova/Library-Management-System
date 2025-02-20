@@ -1660,7 +1660,7 @@
                     </div>
                     <div class="card-content">
                         <div class="number-wrapper">
-                            <h3 class="counter" data-target="150">0</h3>
+                            <h3 class="counter" th:data-target="${availableBooks}" th:text="${availableBooks}">0</h3>
                         </div>
                         <p>Books Available</p>
                     </div>
@@ -1668,30 +1668,30 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card orders">
+                <div class="stat-card borrowed">
                     <div class="card-icon">
-                        <i class="fas fa-clock"></i>
+                        <i class="fas fa-book-reader"></i>
                     </div>
                     <div class="card-content">
                         <div class="number-wrapper">
-                            <h3 class="counter" data-target="45">0</h3>
+                            <h3 class="counter" th:data-target="${borrowedOrders}" th:text="${borrowedOrders}">0</h3>
                         </div>
-                        <p>Orders in Progress</p>
+                        <p>Borrowed Orders</p>
                     </div>
                     <div class="card-wave"></div>
                 </div>
+
             </div>
             <div class="col-md-3">
                 <div class="stat-card authors">
                     <div class="card-icon">
-                        <i class="fas fa-feather"></i>
+                        <i class="fas fa-user"></i>
                     </div>
                     <div class="card-content">
                         <div class="number-wrapper">
-                            <h3 class="counter" th:data-target="${authorCount}">0</h3>
+                            <h3 class="counter" th:data-target="${authorCount}" th:text="${authorCount}">0</h3>
                         </div>
                         <p>Authors</p>
-                        <a href="/authors" class="card-btn">View Authors</a>
                     </div>
                     <div class="card-wave"></div>
                 </div>
@@ -1699,17 +1699,16 @@
             <div class="col-md-3">
                 <div class="stat-card categories">
                     <div class="card-icon">
-                        <i class="fas fa-bookmark"></i>
+                        <i class="fas fa-tags"></i>
                     </div>
                     <div class="card-content">
                         <div class="number-wrapper">
-                            <h3 class="counter" data-target="25">0</h3>
+                            <h3 class="counter" th:data-target="${categoryCount}" th:text="${categoryCount}">0</h3>
                         </div>
                         <p>Categories</p>
                     </div>
                     <div class="card-wave"></div>
                 </div>
-            </div>
         </div>
     </div>
 </div>
@@ -1748,11 +1747,27 @@
     </div>
 </footer>
 
-<!-- Add this before the closing body tag -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            let target = +counter.getAttribute('data-target');
+            let count = 0;
+            let step = Math.ceil(target / 50);
+            let interval = setInterval(() => {
+                count += step;
+                if (count >= target) {
+                    counter.innerText = target;
+                    clearInterval(interval);
+                } else {
+                    counter.innerText = count;
+                }
+            }, 20);
+        });
+    });
     document.addEventListener('DOMContentLoaded', function() {
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
