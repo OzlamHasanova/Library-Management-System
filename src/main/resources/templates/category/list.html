@@ -36,56 +36,62 @@
             border-radius: 10px;
             box-shadow: 10px 10px 30px var(--shadow-dark), -10px -10px 30px var(--shadow-light);
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             overflow: hidden;
-        }
-
-        .book-frame::before, .book-frame::after {
-            content: "";
-            position: absolute;
-            top: 5px;
-            width: 50px;
-            height: 97%;
-            background: var(--page-light);
-            box-shadow: inset 3px 0 8px rgba(0, 0, 0, 0.2);
-            z-index: -1;
-        }
-
-        .book-frame::before {
-            left: 5px;
-            border-radius: 10px 0 0 10px;
-        }
-
-        .book-frame::after {
-            right: 5px;
-            border-radius: 0 10px 10px 0;
-        }
-
-        .book-frame::before, .book-frame::after {
-            background: linear-gradient(180deg, #F8F1E5 5%, #E0D7C9 50%, #F8F1E5 95%);
-        }
-
-        .content {
-            width: 85%;
-            height: 85%;
-            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: inset 3px 3px 15px rgba(0, 0, 0, 0.2);
-            text-align: center;
+        }
+
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .btn-admin {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-admin:hover {
+            background: var(--accent-color);
+        }
+
+        .admin-icon {
+            font-size: 1.2rem;
         }
 
         h1 {
             color: var(--accent-color);
             font-size: 2.5rem;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+        }
+
+        .table-container {
+            width: 100%;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: inset 3px 3px 15px rgba(0, 0, 0, 0.2);
         }
 
         .table {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             overflow: hidden;
+            margin-bottom: 10px;
         }
 
         thead {
@@ -123,6 +129,8 @@
             font-size: 1rem;
             padding: 10px 15px;
             color: white !important;
+            display: inline-block;
+            margin-bottom: 10px;
         }
 
         .btn-add:hover {
@@ -134,10 +142,15 @@
 <body>
 
 <div class="book-frame">
-    <div class="content">
+    <div class="top-bar">
         <h1>Categories</h1>
+        <a href="/admin" class="btn btn-admin">
+            <span class="admin-icon">⚙</span> Admin Panel <span class="admin-icon">↩</span>
+        </a>
+    </div>
 
-        <div class="text-end mb-3">
+    <div class="table-container">
+        <div class="text-end">
             <a href="/categories/new" class="btn btn-add">Create New Category</a>
         </div>
 

@@ -31,6 +31,34 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-admin {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-admin:hover {
+            background: var(--accent-color);
+        }
+
+        .admin-icon {
+            font-size: 1.2rem;
+        }
+
         .page-title {
             text-align: center;
             color: var(--accent-color);
@@ -130,7 +158,12 @@
 
 <div class="container">
     <div class="table-container">
-        <h2 class="page-title">Order List</h2>
+        <div class="top-bar">
+            <h2 class="page-title">Order List</h2>
+            <a href="/admin" class="btn btn-admin">
+                <span class="admin-icon">⚙</span> Admin Panel <span class="admin-icon">↩</span>
+            </a>
+        </div>
 
         <table class="table table-hover">
             <thead>
@@ -168,18 +201,16 @@
             <a href="/orders/create" class="btn btn-create">Create New Order</a>
             <a href="/orders/return" class="btn btn-return">Return Order</a>
         </div>
+
         <!-- Pagination -->
         <div class="pagination">
-            <!-- First & Previous Buttons -->
             <a th:if="${currentPage > 0}" th:href="@{/orders(page=0)}">&laquo; First</a>
             <a th:if="${currentPage > 0}" th:href="@{/orders(page=${currentPage - 1})}">Previous</a>
 
-            <!-- Page Numbers -->
             <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-        <a th:classappend="${currentPage == i} ? 'active'" th:href="@{/orders(page=${i})}" th:text="${i + 1}"></a>
-    </span>
+                <a th:classappend="${currentPage == i} ? 'active'" th:href="@{/orders(page=${i})}" th:text="${i + 1}"></a>
+            </span>
 
-            <!-- Next & Last Buttons -->
             <a th:if="${currentPage + 1 < totalPages}" th:href="@{/orders(page=${currentPage + 1})}">Next</a>
             <a th:if="${currentPage + 1 < totalPages}" th:href="@{/orders(page=${totalPages - 1})}">Last &raquo;</a>
         </div>

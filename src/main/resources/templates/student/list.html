@@ -32,6 +32,34 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-admin {
+            background: var(--secondary-color);
+            color: white;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-admin:hover {
+            background: var(--accent-color);
+        }
+
+        .admin-icon {
+            font-size: 1.2rem;
+        }
+
         h1 {
             text-align: center;
             color: var(--accent-color);
@@ -141,7 +169,12 @@
 <body>
 
 <div class="container">
-    <h1>Student List</h1>
+    <div class="top-bar">
+        <h1>Student List</h1>
+        <a href="/admin" class="btn btn-admin">
+            <span class="admin-icon">⚙</span> Admin Panel <span class="admin-icon">↩</span>
+        </a>
+    </div>
 
     <div class="table-container">
         <table class="table table-dark table-striped">
@@ -192,24 +225,15 @@
             <a th:if="${currentPage > 0}" th:href="@{/students(page=${currentPage - 1}, sortBy=${sortBy}, direction=${direction})}">Previous</a>
 
             <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:classappend="${currentPage == i} ? 'active'"
-               th:href="@{/students(page=${i}, sortBy=${sortBy}, direction=${direction})}"
-               th:text="${i + 1}"></a>
-        </span>
+                <a th:classappend="${currentPage == i} ? 'active'"
+                   th:href="@{/students(page=${i}, sortBy=${sortBy}, direction=${direction})}"
+                   th:text="${i + 1}"></a>
+            </span>
 
             <a th:if="${currentPage < totalPages - 1}" th:href="@{/students(page=${currentPage + 1}, sortBy=${sortBy}, direction=${direction})}">Next</a>
             <a th:if="${currentPage < totalPages - 1}" th:href="@{/students(page=${totalPages - 1}, sortBy=${sortBy}, direction=${direction})}">Last &raquo;</a>
         </div>
     </div>
-
-    <script>
-        function changeSort() {
-            let sortValue = document.getElementById("sortSelect").value;
-            let [sortBy, direction] = sortValue.split(",");
-            window.location.href = `/students?page=0&sortBy=${sortBy}&direction=${direction}`;
-        }
-    </script>
-
 </div>
 
 </body>
