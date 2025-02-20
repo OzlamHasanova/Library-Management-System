@@ -64,7 +64,7 @@ class BookServiceTest {
         when(bookRepository.findByIsDeletedFalse()).thenReturn(Arrays.asList(book));
         when(bookMapper.toBookDTO(book)).thenReturn(bookDTO);
 
-        List<BookDTO> result = bookService.getAllBooks();
+        List<BookDTO> result = bookService.getAllBookList();
 
         // Assert
         assertThat(result).isNotEmpty();
@@ -97,7 +97,7 @@ class BookServiceTest {
     @Test
     void givenValidCategoryId_whenGetBooksByCategory_thenReturnBookDTOList() {
         // Act
-        when(bookRepository.findByCategory_Id(1L)).thenReturn(Arrays.asList(book));
+        when(bookRepository.findAllByCategory_Id(1L)).thenReturn(Arrays.asList(book));
         when(bookMapper.toBookDTO(book)).thenReturn(bookDTO);
 
         List<BookDTO> result = bookService.getBooksByCategory(1L);
@@ -106,7 +106,7 @@ class BookServiceTest {
         assertThat(result).isNotEmpty();
         assertThat(result.get(0).getTitle()).isEqualTo("Test Book");
         //Verify
-        verify(bookRepository, times(1)).findByCategory_Id(1L);
+        verify(bookRepository, times(1)).findAllByCategory_Id(1L);
         verify(bookMapper, times(1)).toBookDTO(book);
     }
 
