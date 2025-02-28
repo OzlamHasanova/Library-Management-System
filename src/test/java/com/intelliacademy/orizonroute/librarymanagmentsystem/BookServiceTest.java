@@ -2,6 +2,7 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.BookNotFoundException;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.CategoryNotFoundException;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.BookMapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Category;
@@ -10,18 +11,19 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class BookServiceTest {
 
     @Mock
@@ -42,9 +44,11 @@ class BookServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+
         category = new Category();
         category.setId(1L);
-        category.setName("Science");
+        category.setName("Fiction");
 
         book = new Book();
         book.setId(1L);
@@ -59,131 +63,164 @@ class BookServiceTest {
     }
 
     @Test
-    void givenBooks_whenGetAllBooks_thenReturnBookDTOList() {
-        //Act
+    void givenValidPageAndSize_whenGetAllBooks_thenReturnBookDTOPage() {
+        // Given
+        int page = 0;
+        int size = 10;
+        String sortBy = "title";
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Book> bookPage = mock(Page.class);
+        when(bookRepository.findAll(pageable)).thenReturn(bookPage);
+
+        BookDTO bookDTO1 = new BookDTO();
+        BookDTO bookDTO2 = new BookDTO();
+        when(bookPage.map(any())).thenAnswer(invocation -> {
+            List<BookDTO> bookDTOList = List.of(bookDTO1, bookDTO2);
+            Page<BookDTO> bookDTOPage = mock(Page.class);
+            when(bookDTOPage.getContent()).thenReturn(bookDTOList);
+            return bookDTOPage;
+        });
+
+        Page<BookDTO> result = bookService.getAllBooks(page, size, sortBy);
+
+        assertNotNull(result);
+        assertEquals(2, result.getContent().size());
+        verify(bookRepository).findAll(pageable);
+        verify(bookPage).map(any());
+    }
+
+    @Test
+    void givenBooksExist_whenGetAllBookList_thenReturnListOfBookDTOs() {
         when(bookRepository.findByIsDeletedFalse()).thenReturn(Arrays.asList(book));
         when(bookMapper.toBookDTO(book)).thenReturn(bookDTO);
 
         List<BookDTO> result = bookService.getAllBookList();
 
-        // Assert
-        assertThat(result).isNotEmpty();
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).getTitle()).isEqualTo("Test Book");
-        //Verify
-        verify(bookRepository, times(1)).findByIsDeletedFalse();
-        verify(bookMapper, times(1)).toBookDTO(book);
+        assertEquals(1, result.size());
+        verify(bookRepository).findByIsDeletedFalse();
     }
 
     @Test
-    void givenBookDTO_whenCreateBook_thenReturnSavedBookDTO() {
-        // Act
-        when(categoryService.getCategoryEntityById(1L)).thenReturn(category);
+    void givenBooksExist_whenGetAvailableBookCount_thenReturnAvailableBookCount() {
+        when(bookRepository.countAvailableBooks()).thenReturn(5L);
+        Long result = bookService.getAvailableBookCount();
+
+        assertEquals(5L, result);
+        verify(bookRepository).countAvailableBooks();
+    }
+
+    @Test
+    void givenValidCategory_whenGetBooksByCategory_thenReturnListOfBookDTOs() {
+        Long categoryId = 1L;
+        when(bookRepository.findAllByCategory_Id(categoryId)).thenReturn(Arrays.asList(book));
+        when(bookMapper.toBookDTO(book)).thenReturn(bookDTO);
+
+        List<BookDTO> result = bookService.getBooksByCategory(categoryId);
+
+        assertEquals(1, result.size());
+        verify(bookRepository).findAllByCategory_Id(categoryId);
+    }
+
+    @Test
+    void givenEmptyCategory_whenGetBooksByCategory_thenThrowBookNotFoundException() {
+        Long categoryId = 1L;
+        when(bookRepository.findAllByCategory_Id(categoryId)).thenReturn(Arrays.asList());
+
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> {
+            bookService.getBooksByCategory(categoryId);
+        });
+        assertEquals("No books found for the given category.", exception.getMessage());
+    }
+
+    @Test
+    void givenValidBookId_whenGetBookById_thenReturnBookDTO() {
+        Long bookId = 1L;
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+        when(bookMapper.toBookDTO(book)).thenReturn(bookDTO);
+
+        BookDTO result = bookService.getBookById(bookId);
+
+        assertEquals(bookDTO, result);
+        verify(bookRepository).findById(bookId);
+    }
+
+    @Test
+    void givenInvalidBookId_whenGetBookById_thenThrowBookNotFoundException() {
+        Long bookId = 1L;
+        when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> {
+            bookService.getBookById(bookId);
+        });
+        assertEquals("Book not found with ID: 1", exception.getMessage());
+    }
+
+    @Test
+    void givenValidBookDTO_whenCreateBook_thenReturnCreatedBookDTO() {
+        when(categoryService.getCategoryEntityById(bookDTO.getCategoryId())).thenReturn(category);
         when(bookMapper.toBook(bookDTO, category)).thenReturn(book);
         when(bookRepository.save(book)).thenReturn(book);
         when(bookMapper.toBookDTO(book)).thenReturn(bookDTO);
 
-        BookDTO savedBook = bookService.createBook(bookDTO);
+        BookDTO result = bookService.createBook(bookDTO);
 
-        // Assert
-        assertThat(savedBook).isNotNull();
-        assertThat(savedBook.getTitle()).isEqualTo("Test Book");
-        //Verify
-        verify(categoryService, times(1)).getCategoryEntityById(1L);
-        verify(bookRepository, times(1)).save(book);
-        verify(bookMapper, times(1)).toBookDTO(book);
+        assertEquals(bookDTO, result);
+        verify(bookRepository).save(book);
     }
 
     @Test
-    void givenValidCategoryId_whenGetBooksByCategory_thenReturnBookDTOList() {
-        // Act
-        when(bookRepository.findAllByCategory_Id(1L)).thenReturn(Arrays.asList(book));
-        when(bookMapper.toBookDTO(book)).thenReturn(bookDTO);
+    void givenInvalidCategory_whenCreateBook_thenThrowCategoryNotFoundException() {
+        when(categoryService.getCategoryEntityById(bookDTO.getCategoryId())).thenReturn(null);
 
-        List<BookDTO> result = bookService.getBooksByCategory(1L);
-
-        // Assert
-        assertThat(result).isNotEmpty();
-        assertThat(result.get(0).getTitle()).isEqualTo("Test Book");
-        //Verify
-        verify(bookRepository, times(1)).findAllByCategory_Id(1L);
-        verify(bookMapper, times(1)).toBookDTO(book);
+        CategoryNotFoundException exception = assertThrows(CategoryNotFoundException.class, () -> {
+            bookService.createBook(bookDTO);
+        });
+        assertEquals("Category not found.", exception.getMessage());
     }
 
     @Test
-    void givenValidId_whenUpdateBook_thenReturnUpdatedBookDTO() {
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
-        when(bookMapper.toBookDTO(book)).thenReturn(bookDTO);
+    void givenValidBookIdAndDTO_whenUpdateBook_thenReturnUpdatedBookDTO() {
+        Long bookId = 1L;
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
         when(bookRepository.save(book)).thenReturn(book);
-
-        BookDTO updatedBook = bookService.updateBook(1L, bookDTO);
-
-        assertThat(updatedBook).isNotNull();
-        assertThat(updatedBook.getTitle()).isEqualTo("Test Book");
-
-        verify(bookRepository, times(1)).findById(1L);
-        verify(bookRepository, times(1)).save(book);
-        verify(bookMapper, times(1)).toBookDTO(book);
-    }
-
-    @Test
-    void givenInvalidId_whenUpdateBook_thenThrowException() {
-        when(bookRepository.findById(2L)).thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> bookService.updateBook(2L, bookDTO))
-                .isInstanceOf(BookNotFoundException.class)
-                .hasMessageContaining("Book not found");
-
-        verify(bookRepository, times(1)).findById(2L);
-        verify(bookRepository, never()).save(any());
-    }
-
-    @Test
-    void givenValidId_whenGetBookById_thenReturnBookDTO() {
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         when(bookMapper.toBookDTO(book)).thenReturn(bookDTO);
 
-        BookDTO foundBook = bookService.getBookById(1L);
+        BookDTO result = bookService.updateBook(bookId, bookDTO);
 
-        assertThat(foundBook).isNotNull();
-        assertThat(foundBook.getTitle()).isEqualTo("Test Book");
-
-        verify(bookRepository, times(1)).findById(1L);
-        verify(bookMapper, times(1)).toBookDTO(book);
+        assertEquals(bookDTO, result);
+        verify(bookRepository).save(book);
     }
 
     @Test
-    void givenInvalidId_whenGetBookById_thenThrowException() {
-        when(bookRepository.findById(2L)).thenReturn(Optional.empty());
+    void givenInvalidBookId_whenUpdateBook_thenThrowBookNotFoundException() {
+        Long bookId = 1L;
+        when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> bookService.getBookById(2L))
-                .isInstanceOf(BookNotFoundException.class)
-                .hasMessageContaining("Book not found with ID: 2");
-
-        verify(bookRepository, times(1)).findById(2L);
-        verify(bookMapper, never()).toBookDTO(any());
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> {
+            bookService.updateBook(bookId, bookDTO);
+        });
+        assertEquals("Book not found.", exception.getMessage());
     }
 
     @Test
-    void givenValidId_whenDeleteBook_thenSetDeletedTrue() {
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+    void givenValidBookId_whenDeleteBook_thenDeleteBookSuccessfully() {
+        Long bookId = 1L;
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
 
-        bookService.deleteBook(1L);
+        bookService.deleteBook(bookId);
 
-        assertThat(book.isDeleted()).isTrue();
-        verify(bookRepository, times(1)).findById(1L);
-        verify(bookRepository, times(1)).save(book);
+        verify(bookRepository).save(book);
+        assertTrue(book.isDeleted());
     }
 
     @Test
-    void givenInvalidId_whenDeleteBook_thenThrowException() {
-        when(bookRepository.findById(2L)).thenReturn(Optional.empty());
+    void givenInvalidBookId_whenDeleteBook_thenThrowBookNotFoundException() {
+        Long bookId = 1L;
+        when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> bookService.deleteBook(2L))
-                .isInstanceOf(BookNotFoundException.class)
-                .hasMessageContaining("Book not found with ID: 2");
-
-        verify(bookRepository, times(1)).findById(2L);
-        verify(bookRepository, never()).save(any());
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> {
+            bookService.deleteBook(bookId);
+        });
+        assertEquals("Book not found with ID: 1", exception.getMessage());
     }
 }

@@ -24,14 +24,14 @@ public class FineCalculationService {
     @Transactional
     @Scheduled(cron = "0 0 0 * * ?")
     public void applyDailyFines() {
-        log.info("⏳ Checking for overdue orders...");
+        log.info("Checking for overdue orders...");
 
         List<Order> overdueOrders = orderRepository.findAllByStatusAndDueDateBefore(
                 OrderStatus.BORROWED, LocalDateTime.now()
         );
 
         if (overdueOrders.isEmpty()) {
-            log.info("✅ No overdue orders found.");
+            log.info("No overdue orders found.");
             return;
         }
 
@@ -42,10 +42,10 @@ public class FineCalculationService {
 
             BigDecimal newFine = order.getFineAmount().add(BigDecimal.valueOf(0.5));
             order.setFineAmount(newFine);
-            log.info("💰 Fine updated for order ID {}: New Fine Amount = {}", order.getId(), newFine);
+            log.info("Fine updated for order ID {}: New Fine Amount = {}", order.getId(), newFine);
         }
 
         orderRepository.saveAll(overdueOrders);
-        log.info("✅ Fine calculation completed successfully.");
+        log.info("Fine calculation completed successfully.");
     }
 }

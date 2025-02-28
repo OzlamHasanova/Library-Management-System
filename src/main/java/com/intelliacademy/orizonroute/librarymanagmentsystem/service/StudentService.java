@@ -7,7 +7,6 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.StudentMappe
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Student;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +29,7 @@ public class StudentService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
         return studentRepository.findAll(pageable)
-                .map(student -> new StudentMapper().toDTO(student));
+                .map(studentMapper::toDTO);
     }
 
     public StudentDTO findStudentById(Long id) {

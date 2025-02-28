@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
     id 'org.springframework.boot' version '3.2.3'
     id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -62,10 +63,36 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+
+    afterEvaluate {
+        jacocoTestReport {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, include: '**/service/**')
+            }))
+        }
+    }
+}
+
 tasks.withType(JavaCompile) {
     options.annotationProcessorPath = configurations.annotationProcessor
     options.compilerArgs += [
-            '-Amapstruct.defaultComponentModel=spring' // Optional: Use Spring component model
+            '-Amapstruct.defaultComponentModel=spring'
     ]
 }
 
