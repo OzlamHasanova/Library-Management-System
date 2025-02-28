@@ -24,7 +24,6 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
-    private final AuthorService authorService;
     private final CategoryService categoryService;
 
     public Page<BookDTO> getAllBooks(int page, int size, String sortBy) {
@@ -41,6 +40,23 @@ public class BookService {
         return bookRepository.countAvailableBooks();
     }
 
+    public List<BookDTO> getBooksByCategory(Long categoryId) {
+        List<Book> books = bookRepository.findAllByCategory_Id(categoryId);
+        if (books.isEmpty()) {
+            throw new BookNotFoundException(ErrorMessages.BOOKS_NOT_FOUND_FOR_CATEGORY);
+        }
+        return books.stream()
+                .map(bookMapper::toBookDTO)
+                .toList();
+    }
+
+    public BookDTO getBookById(Long id) {
+        Book book = bookRepository.findById(id)
+                .filter(b -> !b.isDeleted())
+                .orElseThrow(() -> new BookNotFoundException(ErrorMessages.BOOK_NOT_FOUND_WITH_ID + id));
+        return bookMapper.toBookDTO(book);
+    }
+
     @Transactional
     public BookDTO createBook(BookDTO bookDTO) {
         Category category = categoryService.getCategoryEntityById(bookDTO.getCategoryId());
@@ -52,29 +68,12 @@ public class BookService {
         return bookMapper.toBookDTO(savedBook);
     }
 
-    public List<BookDTO> getBooksByCategory(Long categoryId) {
-        List<Book> books = bookRepository.findAllByCategory_Id(categoryId);
-        if (books.isEmpty()) {
-            throw new BookNotFoundException(ErrorMessages.BOOKS_NOT_FOUND_FOR_CATEGORY);
-        }
-        return books.stream()
-                .map(bookMapper::toBookDTO)
-                .toList();
-    }
-
     @Transactional
     public BookDTO updateBook(Long id, BookDTO bookDTO) {
         Book book = bookRepository.findById(id)
                 .filter(b -> !b.isDeleted())
                 .orElseThrow(() -> new BookNotFoundException(ErrorMessages.BOOK_NOT_FOUND));
         bookRepository.save(book);
-        return bookMapper.toBookDTO(book);
-    }
-
-    public BookDTO getBookById(Long id) {
-        Book book = bookRepository.findById(id)
-                .filter(b -> !b.isDeleted())
-                .orElseThrow(() -> new BookNotFoundException(ErrorMessages.BOOK_NOT_FOUND_WITH_ID + id));
         return bookMapper.toBookDTO(book);
     }
 

@@ -41,6 +41,25 @@ public class CategoryService {
         return categoryPage.map(categoryMapper::toCategoryDTO);
     }
 
+    public Set<BookDTO> getCategoryBooks(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
+
+        return category.getBooks().stream()
+                .map(bookMapper::toBookDTO)
+                .collect(Collectors.toSet());
+    }
+    public CategoryDTO getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
+        return categoryMapper.toCategoryDTO(category);
+    }
+
+    public Category getCategoryEntityById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
+    }
+
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         Category category = categoryMapper.toCategory(categoryDTO);
         Category savedCategory = categoryRepository.save(category);
@@ -55,29 +74,10 @@ public class CategoryService {
         return categoryMapper.toCategoryDTO(updatedCategory);
     }
 
-    public CategoryDTO getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
-        return categoryMapper.toCategoryDTO(category);
-    }
-
-    public Category getCategoryEntityById(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
-    }
-
     public void deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
         categoryRepository.delete(category);
     }
 
-    public Set<BookDTO> getCategoryBooks(Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id));
-
-        return category.getBooks().stream()
-                .map(bookMapper::toBookDTO)
-                .collect(Collectors.toSet());
-    }
 }

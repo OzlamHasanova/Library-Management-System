@@ -18,7 +18,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class StudentService {
 
     private final StudentRepository studentRepository;
@@ -34,29 +33,6 @@ public class StudentService {
                 .map(student -> new StudentMapper().toDTO(student));
     }
 
-    public StudentDTO createStudent(StudentDTO studentDTO) {
-        Student student = studentMapper.toEntity(studentDTO);
-        Student savedStudent = studentRepository.save(student);
-        return studentMapper.toDTO(savedStudent);
-    }
-
-    public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
-        student.setName(studentDTO.getName());
-        student.setSurname(studentDTO.getSurname());
-        student.setSif(studentDTO.getSif());
-        Student updatedStudent = studentRepository.save(student);
-        return studentMapper.toDTO(updatedStudent);
-    }
-
-    public void deleteStudent(Long id) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
-        student.setDeleted(true);
-        studentRepository.save(student);
-    }
-
     public StudentDTO findStudentById(Long id) {
         return studentRepository.findById(id).map(studentMapper::toDTO)
                 .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
@@ -66,4 +42,29 @@ public class StudentService {
         return studentRepository.findAll().stream()
                 .map(studentMapper::toDTO).toList();
     }
+
+    public void createStudent(StudentDTO studentDTO) {
+        Student student = studentMapper.toEntity(studentDTO);
+        Student savedStudent = studentRepository.save(student);
+        studentMapper.toDTO(savedStudent);
+    }
+
+    public void updateStudent(Long id, StudentDTO studentDTO) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
+        student.setName(studentDTO.getName());
+        student.setSurname(studentDTO.getSurname());
+        student.setSif(studentDTO.getSif());
+        Student updatedStudent = studentRepository.save(student);
+        studentMapper.toDTO(updatedStudent);
+    }
+
+    public void deleteStudent(Long id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
+        student.setDeleted(true);
+        studentRepository.save(student);
+    }
+
+
 }

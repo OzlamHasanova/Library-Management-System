@@ -40,6 +40,11 @@ public class OrderService {
         return orderRepository.countByStatus(OrderStatus.BORROWED);
     }
 
+    public OrderDTO getOrderById(Long orderId) {
+        return orderMapper.toDTO(orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(ErrorMessages.ORDER_NOT_FOUND)));
+    }
+
     @Transactional
     public OrderDTO createOrder(String sif, String bookIsbn, String dueDate, String notes) {
         Student student = studentRepository.findBySif(sif)
@@ -69,7 +74,7 @@ public class OrderService {
 
 
     @Transactional
-    public OrderDTO returnOrder(String studentSif, String bookIsbn) {
+    public void returnOrder(String studentSif, String bookIsbn) {
         studentRepository.findBySif(studentSif)
                 .orElseThrow(() -> new StudentNotFoundException(ErrorMessages.STUDENT_NOT_FOUND));
 
@@ -95,11 +100,8 @@ public class OrderService {
         }
 
         Order savedOrder = orderRepository.save(order);
-        return orderMapper.toDTO(savedOrder);
+        orderMapper.toDTO(savedOrder);
     }
 
-    public OrderDTO getOrderById(Long orderId) {
-        return orderMapper.toDTO(orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(ErrorMessages.ORDER_NOT_FOUND)));
-    }
+
 }
