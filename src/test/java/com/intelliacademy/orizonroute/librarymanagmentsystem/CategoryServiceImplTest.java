@@ -8,7 +8,7 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.CategoryMapp
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Category;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.CategoryRepository;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CategoryServiceTest {
+class CategoryServiceImplTest {
 
     @Mock
     private CategoryRepository categoryRepository;
@@ -39,7 +39,7 @@ class CategoryServiceTest {
     private BookMapper bookMapper;
 
     @InjectMocks
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryService;
 
     private Category category;
     private CategoryDTO categoryDTO;

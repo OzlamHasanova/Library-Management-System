@@ -2,10 +2,10 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.BookNotFoundException;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.CategoryServiceImpl;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CloudinaryService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.AuthorServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -13,16 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("books")
 @RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
-    private final AuthorService authorService;
-    private final CategoryService categoryService;
+    private final AuthorServiceImpl authorService;
+    private final CategoryServiceImpl categoryService;
     private final CloudinaryService cloudinaryService;
 
     @GetMapping
@@ -35,7 +33,8 @@ public class BookController {
         model.addAttribute("books", bookPage.getContent());
         model.addAttribute("currentPage", bookPage.getNumber());
         model.addAttribute("totalPages", bookPage.getTotalPages());
-
+        model.addAttribute("hasNext", bookPage.hasNext());
+        model.addAttribute("hasPrevious", bookPage.hasPrevious());
         return "books/list";
     }
 

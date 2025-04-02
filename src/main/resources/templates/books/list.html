@@ -123,7 +123,6 @@
             transition: 0.3s;
         }
 
-        /* Düymə Rəngləri */
         .action-buttons .btn-view {
             background: var(--gradient-1);
             color: var(--text-light);
@@ -201,16 +200,19 @@
 
     <!-- Pagination -->
     <div class="pagination">
-        <a th:if="${currentPage > 1}" th:href="@{/books(page=1)}">&laquo; First</a>
-        <a th:if="${currentPage > 1}" th:href="@{/books(page=${currentPage - 1})}">Previous</a>
-
-        <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-            <a th:classappend="${currentPage == i} ? 'active'" th:href="@{/books(page=${i})}" th:text="${i}"></a>
+        <span th:if="${hasPrevious}">
+            <a th:href="@{/books(page=${currentPage - 1}, size=${size}, sortBy=${sortBy})}">Previous</a>
         </span>
 
-        <a th:if="${currentPage < totalPages}" th:href="@{/books(page=${currentPage + 1})}">Next</a>
-        <a th:if="${currentPage < totalPages}" th:href="@{/books(page=${totalPages})}">Last &raquo;</a>
+        <span th:each="i : ${pageNumbers}">
+            <a th:href="@{/books(page=${i}, size=${size}, sortBy=${sortBy})}" th:text="${i}" th:classappend="${i == currentPage ? ' active' : ''}"></a>
+        </span>
+
+        <span th:if="${hasNext}">
+            <a th:href="@{/books(page=${currentPage + 1}, size=${size}, sortBy=${sortBy})}">Next</a>
+        </span>
     </div>
+
 </div>
 </body>
 </html>

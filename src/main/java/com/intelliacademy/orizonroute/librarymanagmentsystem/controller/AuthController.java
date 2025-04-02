@@ -1,9 +1,9 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.UserDTO;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.AuthorServiceImpl;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.BookServiceImpl;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.CategoryServiceImpl;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -17,10 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final BookService bookService;
+    private final BookServiceImpl bookService;
     private final OrderService orderService;
-    private final AuthorService authorService;
-    private final CategoryService categoryService;
+    private final AuthorServiceImpl authorService;
+    private final CategoryServiceImpl categoryService;
 
     @GetMapping("/login")
     public ModelAndView loginPage() {

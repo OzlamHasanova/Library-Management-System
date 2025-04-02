@@ -2,10 +2,8 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.CategoryDTO;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

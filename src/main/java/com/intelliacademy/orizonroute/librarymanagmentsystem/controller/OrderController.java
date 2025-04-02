@@ -1,7 +1,7 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.OrderDTO;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.BookServiceImpl;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.OrderService;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("orders")
 @RequiredArgsConstructor
@@ -19,7 +17,7 @@ public class OrderController {
 
     private final OrderService orderService;
     private final StudentService studentService;
-    private final BookService bookService;
+    private final BookServiceImpl bookService;
 
     @GetMapping
     public String listOrders(@RequestParam(defaultValue = "0") int page,

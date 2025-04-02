@@ -1,8 +1,8 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.BookServiceImpl;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.CategoryServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/website")
 public class WebsiteController {
-    private final BookService bookService;
-    private final CategoryService categoryService;
+    private final BookServiceImpl bookService;
+    private final CategoryServiceImpl categoryService;
 
-    public WebsiteController(BookService bookService, CategoryService categoryService) {
+    public WebsiteController(BookServiceImpl bookService, CategoryServiceImpl categoryService) {
         this.bookService = bookService;
         this.categoryService = categoryService;
     }

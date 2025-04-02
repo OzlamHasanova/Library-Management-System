@@ -5,7 +5,7 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Category;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.enums.BookAvailability;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.AuthorServiceImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @Component
 public class BookMapper {
 
-    private final AuthorService authorService;
+    private final AuthorServiceImpl authorService;
 
-    public BookMapper(AuthorService authorService) {
+    public BookMapper(AuthorServiceImpl authorService) {
         this.authorService = authorService;
     }
 

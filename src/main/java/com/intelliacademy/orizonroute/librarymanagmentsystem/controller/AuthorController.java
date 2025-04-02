@@ -4,7 +4,6 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.AuthorDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +22,7 @@ public class AuthorController {
         model.addAttribute("authors", authorService.getAllAuthors());
         return "author/list";
     }
+
     @GetMapping("/new")
     public String createAuthorForm(Model model) {
         model.addAttribute("author", new Author());

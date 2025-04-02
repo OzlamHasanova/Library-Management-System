@@ -7,8 +7,8 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.BookMapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Book;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Category;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.BookRepository;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.BookServiceImpl;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class BookServiceTest {
+class BookServiceImplTest {
 
     @Mock
     private BookRepository bookRepository;
@@ -33,10 +33,10 @@ class BookServiceTest {
     private BookMapper bookMapper;
 
     @Mock
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryService;
 
     @InjectMocks
-    private BookService bookService;
+    private BookServiceImpl bookService;
 
     private Book book;
     private BookDTO bookDTO;

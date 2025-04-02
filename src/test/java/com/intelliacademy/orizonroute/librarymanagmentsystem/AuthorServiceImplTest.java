@@ -5,7 +5,7 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.AuthorNot
 import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.AuthorMapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Author;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.AuthorRepository;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.AuthorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AuthorServiceTest {
+class AuthorServiceImplTest {
 
     @Mock
     private AuthorRepository authorRepository;
@@ -33,7 +33,7 @@ class AuthorServiceTest {
     private AuthorMapper authorMapper;
 
     @InjectMocks
-    private AuthorService authorService;
+    private AuthorServiceImpl authorService;
 
     private Author author;
     private AuthorDTO authorDTO;

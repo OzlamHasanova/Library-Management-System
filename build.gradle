@@ -30,6 +30,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'org.postgresql:postgresql:42.7.1'
 
     // https://mvnrepository.com/artifact/com.cloudinary/cloudinary-http44
     implementation 'com.cloudinary:cloudinary-http44:1.39.0'

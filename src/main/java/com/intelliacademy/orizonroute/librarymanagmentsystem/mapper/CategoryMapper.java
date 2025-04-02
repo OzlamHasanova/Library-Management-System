@@ -23,7 +23,6 @@ public class CategoryMapper {
         if (categoryDTO == null) {
             return null;
         }
-
         Category category = new Category();
         category.setId(categoryDTO.getId());
         category.setName(categoryDTO.getName());

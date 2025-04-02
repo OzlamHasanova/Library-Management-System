@@ -24,6 +24,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT COUNT(b) FROM Book b WHERE b.stock > 0 AND b.isDeleted = false")
     Long countAvailableBooks();
 
+    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.authors LEFT JOIN FETCH b.category WHERE b.id = :id")
+    Optional<Book> findByIdWithDetails(@Param("id") Long id);
+
+
 
     @Query("SELECT b FROM Book b LEFT JOIN b.authors a " +
             "WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :query, '%')) " +
