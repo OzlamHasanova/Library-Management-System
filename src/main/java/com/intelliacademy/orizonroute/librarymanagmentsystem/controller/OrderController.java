@@ -1,9 +1,9 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.OrderDTO;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.BookServiceImpl;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.OrderService;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.StudentService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.StudentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderService orderService;
-    private final StudentService studentService;
-    private final BookServiceImpl bookService;
+    private final StudentServiceImpl studentServiceImpl;
+    private final BookService bookService;
 
     @GetMapping
     public String listOrders(@RequestParam(defaultValue = "0") int page,
@@ -38,7 +38,7 @@ public class OrderController {
     @GetMapping("/create")
     public String showCreateOrderForm(Model model) {
         model.addAttribute("order", new OrderDTO());
-        model.addAttribute("students", studentService.getStudentList());
+        model.addAttribute("students", studentServiceImpl.getStudentList());
         model.addAttribute("books", bookService.getAllBookList());
         return "order/create";
     }
@@ -46,7 +46,7 @@ public class OrderController {
     @GetMapping("/return")
     public String showReturnOrderForm(Model model) {
         model.addAttribute("order", new OrderDTO());
-        model.addAttribute("students", studentService.getStudentList());
+        model.addAttribute("students", studentServiceImpl.getStudentList());
         model.addAttribute("books", bookService.getAllBookList());
         return "order/return";
     }
@@ -62,7 +62,7 @@ public class OrderController {
             return "redirect:/orders";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("students", studentService.getStudentList());
+            model.addAttribute("students", studentServiceImpl.getStudentList());
             model.addAttribute("books", bookService.getAllBookList());
             return "order/create";
         }
@@ -78,7 +78,7 @@ public class OrderController {
             return "redirect:/orders";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("students", studentService.getStudentList());
+            model.addAttribute("students", studentServiceImpl.getStudentList());
             model.addAttribute("books", bookService.getAllBookList());
             return "order/return";
         }

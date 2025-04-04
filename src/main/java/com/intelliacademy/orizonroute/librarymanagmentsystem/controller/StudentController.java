@@ -1,7 +1,7 @@
 package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.StudentDTO;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.StudentService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.StudentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class StudentController {
 
-    private final StudentService studentService;
+    private final StudentServiceImpl studentServiceImpl;
 
     @GetMapping
     public String listStudents(
@@ -23,7 +23,7 @@ public class StudentController {
             @RequestParam(defaultValue = "asc") String direction,
             Model model) {
 
-        Page<StudentDTO> students = studentService.getAllStudents(page, size, sortBy, direction);
+        Page<StudentDTO> students = studentServiceImpl.getAllStudents(page, size, sortBy, direction);
 
         model.addAttribute("students", students.getContent());
         model.addAttribute("currentPage", page);
@@ -43,26 +43,26 @@ public class StudentController {
 
     @PostMapping("/create")
     public String createStudent(@ModelAttribute("student") StudentDTO studentDTO) {
-        studentService.createStudent(studentDTO);
+        studentServiceImpl.createStudent(studentDTO);
         return "redirect:/students";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditStudentForm(@PathVariable("id") Long id, Model model) {
-        StudentDTO studentDTO = studentService.findStudentById(id);
+        StudentDTO studentDTO = studentServiceImpl.findStudentById(id);
         model.addAttribute("student", studentDTO);
         return "student/edit";
     }
 
     @PostMapping("/edit/{id}")
     public String updateStudent(@PathVariable("id") Long id, @ModelAttribute("student") StudentDTO studentDTO) {
-        studentService.updateStudent(id, studentDTO);
+        studentServiceImpl.updateStudent(id, studentDTO);
         return "redirect:/students";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteStudent(@PathVariable("id") Long id) {
-        studentService.deleteStudent(id);
+        studentServiceImpl.deleteStudent(id);
         return "redirect:/students";
     }
 }

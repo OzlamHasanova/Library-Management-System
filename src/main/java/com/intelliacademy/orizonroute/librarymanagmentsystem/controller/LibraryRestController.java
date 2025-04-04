@@ -4,9 +4,9 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.common.ApiMessages;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.AuthorDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.CategoryDTO;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.AuthorServiceImpl;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.BookServiceImpl;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.CategoryServiceImpl;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,9 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LibraryRestController {
 
-    private final AuthorServiceImpl authorService;
-    private final BookServiceImpl bookService;
-    private final CategoryServiceImpl categoryService;
+    private final AuthorService authorService;
+    private final BookService bookService;
+    private final CategoryService categoryService;
 
     @GetMapping("/categories/{categoryId}/books")
     @Operation(summary = ApiMessages.Book.GET_BOOKS_BY_CATEGORY)

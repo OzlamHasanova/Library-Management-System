@@ -5,7 +5,7 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.StudentNo
 import com.intelliacademy.orizonroute.librarymanagmentsystem.mapper.StudentMapper;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.model.Student;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.StudentRepository;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.StudentService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.StudentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class StudentServiceTest {
+class StudentServiceImplTest {
 
     @Mock
     private StudentRepository studentRepository;
@@ -30,7 +30,7 @@ class StudentServiceTest {
     private StudentMapper studentMapper;
 
     @InjectMocks
-    private StudentService studentService;
+    private StudentServiceImpl studentServiceImpl;
 
     private Student student1;
     private Student student2;
@@ -71,7 +71,7 @@ class StudentServiceTest {
         when(studentMapper.toDTO(student1)).thenReturn(studentDTO1);
         when(studentMapper.toDTO(student2)).thenReturn(studentDTO2);
 
-        Page<StudentDTO> result = studentService.getAllStudents(0, 10, "name", "asc");
+        Page<StudentDTO> result = studentServiceImpl.getAllStudents(0, 10, "name", "asc");
 
         assertNotNull(result);
         assertEquals(2, result.getContent().size());
@@ -86,7 +86,7 @@ class StudentServiceTest {
         when(studentMapper.toDTO(student1)).thenReturn(studentDTO1);
         when(studentMapper.toDTO(student2)).thenReturn(studentDTO2);
 
-        List<StudentDTO> result = studentService.getStudentList();
+        List<StudentDTO> result = studentServiceImpl.getStudentList();
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -105,7 +105,7 @@ class StudentServiceTest {
         when(studentRepository.findAll(pageable)).thenReturn(studentPage);
         when(studentMapper.toDTO(student1)).thenReturn(studentDTO1);
 
-        Page<StudentDTO> result = studentService.getAllStudents(0, 10, "name", "desc");
+        Page<StudentDTO> result = studentServiceImpl.getAllStudents(0, 10, "name", "desc");
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -121,7 +121,7 @@ class StudentServiceTest {
         when(studentRepository.findAll(pageable)).thenReturn(studentPage);
         when(studentMapper.toDTO(student1)).thenReturn(studentDTO1);
 
-        Page<StudentDTO> result = studentService.getAllStudents(0, 10, "name", "asc");
+        Page<StudentDTO> result = studentServiceImpl.getAllStudents(0, 10, "name", "asc");
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -137,7 +137,7 @@ class StudentServiceTest {
         when(studentRepository.findAll(pageable)).thenReturn(studentPage);
         when(studentMapper.toDTO(student1)).thenReturn(studentDTO1);
 
-        Page<StudentDTO> result = studentService.getAllStudents(0, 10, "name", "invalid");
+        Page<StudentDTO> result = studentServiceImpl.getAllStudents(0, 10, "name", "invalid");
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -151,7 +151,7 @@ class StudentServiceTest {
         when(studentRepository.findById(id)).thenReturn(Optional.of(student1));
         when(studentMapper.toDTO(student1)).thenReturn(studentDTO1);
 
-        StudentDTO result = studentService.findStudentById(id);
+        StudentDTO result = studentServiceImpl.findStudentById(id);
 
         assertNotNull(result);
         assertEquals("John", result.getName());
@@ -164,7 +164,7 @@ class StudentServiceTest {
         Long id = 1L;
         when(studentRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(StudentNotFoundException.class, () -> studentService.findStudentById(id));
+        assertThrows(StudentNotFoundException.class, () -> studentServiceImpl.findStudentById(id));
         verify(studentRepository).findById(id);
     }
 
@@ -178,7 +178,7 @@ class StudentServiceTest {
         when(studentMapper.toEntity(studentDTO)).thenReturn(student1);
         when(studentRepository.save(student1)).thenReturn(student1);
 
-        studentService.createStudent(studentDTO);
+        studentServiceImpl.createStudent(studentDTO);
 
         verify(studentRepository).save(student1);
     }
@@ -193,7 +193,7 @@ class StudentServiceTest {
 
         when(studentRepository.findById(studentId)).thenReturn(Optional.of(updatedStudent));
 
-        studentService.updateStudent(studentId, studentDTO1);
+        studentServiceImpl.updateStudent(studentId, studentDTO1);
 
         assertEquals("John", updatedStudent.getName());
         assertEquals("Doe", updatedStudent.getSurname());
@@ -204,7 +204,7 @@ class StudentServiceTest {
     void givenInvalidId_whenUpdateStudent_thenThrowStudentNotFoundException() {
         when(studentRepository.findById(studentId)).thenReturn(Optional.empty());
 
-        assertThrows(StudentNotFoundException.class, () -> studentService.updateStudent(studentId, studentDTO1));
+        assertThrows(StudentNotFoundException.class, () -> studentServiceImpl.updateStudent(studentId, studentDTO1));
         verify(studentRepository).findById(studentId);
     }
 
@@ -212,7 +212,7 @@ class StudentServiceTest {
     void givenValidId_whenDeleteStudent_thenStudentIsDeleted() {
         when(studentRepository.findById(studentId)).thenReturn(Optional.of(student1));
 
-        studentService.deleteStudent(studentId);
+        studentServiceImpl.deleteStudent(studentId);
 
         assertTrue(student1.isDeleted());
         verify(studentRepository).save(student1);
@@ -222,7 +222,7 @@ class StudentServiceTest {
     void givenInvalidId_whenDeleteStudent_thenThrowStudentNotFoundException() {
         when(studentRepository.findById(studentId)).thenReturn(Optional.empty());
 
-        assertThrows(StudentNotFoundException.class, () -> studentService.deleteStudent(studentId));
+        assertThrows(StudentNotFoundException.class, () -> studentServiceImpl.deleteStudent(studentId));
         verify(studentRepository).findById(studentId);
     }
 }

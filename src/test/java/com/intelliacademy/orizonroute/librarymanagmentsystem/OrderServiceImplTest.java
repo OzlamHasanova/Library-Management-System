@@ -12,7 +12,7 @@ import com.intelliacademy.orizonroute.librarymanagmentsystem.model.enums.OrderSt
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.BookRepository;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.OrderRepository;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.repository.StudentRepository;
-import com.intelliacademy.orizonroute.librarymanagmentsystem.service.OrderService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.OrderServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class OrderServiceTest {
+class OrderServiceImplTest {
 
     @Mock
     private OrderRepository orderRepository;
@@ -51,7 +51,7 @@ class OrderServiceTest {
     private OrderMapper orderMapper;
 
     @InjectMocks
-    private OrderService orderService;
+    private OrderServiceImpl orderServiceImpl;
 
     private Student student;
     private Book book;
@@ -90,7 +90,7 @@ class OrderServiceTest {
         when(orderRepository.findAll(pageable)).thenReturn(orderPage);
         when(orderMapper.toDTO(order)).thenReturn(orderDTO);
 
-        Page<OrderDTO> result = orderService.getAllOrders(0, 5);
+        Page<OrderDTO> result = orderServiceImpl.getAllOrders(0, 5);
 
         assertThat(result).isNotNull();
         assertThat(result.getTotalElements()).isEqualTo(1);
@@ -102,7 +102,7 @@ class OrderServiceTest {
     void givenOrdersBorrowed_whenGetBorrowedOrdersCount_thenReturnCorrectCount() {
         when(orderRepository.countByStatus(OrderStatus.BORROWED)).thenReturn(5L);
 
-        Long count = orderService.getBorrowedOrdersCount();
+        Long count = orderServiceImpl.getBorrowedOrdersCount();
 
         assertThat(count).isEqualTo(5);
         verify(orderRepository).countByStatus(OrderStatus.BORROWED);
@@ -115,7 +115,7 @@ class OrderServiceTest {
         when(orderRepository.save(any())).thenReturn(order);
         when(orderMapper.toDTO(order)).thenReturn(orderDTO);
 
-        OrderDTO savedOrder = orderService.createOrder("S12345", "ISBN12345", "2025-02-28", "Note");
+        OrderDTO savedOrder = orderServiceImpl.createOrder("S12345", "ISBN12345", "2025-02-28", "Note");
 
         assertThat(savedOrder).isNotNull();
         verify(orderRepository).save(any());
@@ -126,7 +126,7 @@ class OrderServiceTest {
     void givenInvalidStudent_whenCreateOrder_thenThrowStudentNotFoundException() {
         when(studentRepository.findBySif("S00000")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> orderService.createOrder("S00000", "ISBN12345", "2025-02-28", "Note"))
+        assertThatThrownBy(() -> orderServiceImpl.createOrder("S00000", "ISBN12345", "2025-02-28", "Note"))
                 .isInstanceOf(StudentNotFoundException.class);
 
         verify(orderRepository, never()).save(any());
@@ -138,7 +138,7 @@ class OrderServiceTest {
         when(studentRepository.findBySif("S12345")).thenReturn(Optional.of(student));
         when(bookRepository.findBookByIsbn("ISBN12345")).thenReturn(Optional.of(book));
 
-        assertThatThrownBy(() -> orderService.createOrder("S12345", "ISBN12345", "2025-02-28", "Note"))
+        assertThatThrownBy(() -> orderServiceImpl.createOrder("S12345", "ISBN12345", "2025-02-28", "Note"))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Book is out of stock");
 
@@ -152,7 +152,7 @@ class OrderServiceTest {
         when(orderRepository.findByStudentSif("S12345")).thenReturn(List.of(order));
         when(orderRepository.save(order)).thenReturn(order);
 
-        orderService.returnOrder("S12345", "ISBN12345");
+        orderServiceImpl.returnOrder("S12345", "ISBN12345");
 
         assertThat(order.isReturned()).isTrue();
         assertThat(order.getStatus()).isEqualTo(OrderStatus.RETURNED);
@@ -168,7 +168,7 @@ class OrderServiceTest {
         when(orderRepository.findByStudentSif("S12345")).thenReturn(List.of(order));
         when(orderRepository.save(order)).thenReturn(order);
 
-        orderService.returnOrder("S12345", "ISBN12345");
+        orderServiceImpl.returnOrder("S12345", "ISBN12345");
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.OVERDUE);
         assertThat(order.getFineAmount()).isEqualTo(BigDecimal.valueOf(25));
@@ -182,7 +182,7 @@ class OrderServiceTest {
         when(bookRepository.findBookByIsbn("ISBN12345")).thenReturn(Optional.of(book));
         when(orderRepository.findByStudentSif("S12345")).thenReturn(List.of());
 
-        assertThatThrownBy(() -> orderService.returnOrder("S12345", "ISBN12345"))
+        assertThatThrownBy(() -> orderServiceImpl.returnOrder("S12345", "ISBN12345"))
                 .isInstanceOf(OrderNotFoundException.class);
 
         verify(bookRepository, never()).save(any());
@@ -198,7 +198,7 @@ class OrderServiceTest {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
         when(orderMapper.toDTO(order)).thenReturn(new OrderDTO());
 
-        OrderDTO orderDTO = orderService.getOrderById(1L);
+        OrderDTO orderDTO = orderServiceImpl.getOrderById(1L);
 
         assertNotNull(orderDTO);
         verify(orderRepository).findById(1L);
@@ -209,7 +209,7 @@ class OrderServiceTest {
     void givenNonExistingOrderId_whenGetOrderById_thenThrowOrderNotFoundException() {
         when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(OrderNotFoundException.class, () -> orderService.getOrderById(1L));
+        assertThrows(OrderNotFoundException.class, () -> orderServiceImpl.getOrderById(1L));
 
         verify(orderRepository).findById(1L);
     }
@@ -217,7 +217,7 @@ class OrderServiceTest {
     void givenNonExistingStudent_whenReturnOrder_thenThrowStudentNotFoundException() {
         when(studentRepository.findBySif(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(StudentNotFoundException.class, () -> orderService.returnOrder("studentSif", "12345"));
+        assertThrows(StudentNotFoundException.class, () -> orderServiceImpl.returnOrder("studentSif", "12345"));
     }
 
     @Test
@@ -225,7 +225,7 @@ class OrderServiceTest {
         when(studentRepository.findBySif(anyString())).thenReturn(Optional.of(new Student()));
         when(bookRepository.findBookByIsbn(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(BookNotFoundException.class, () -> orderService.returnOrder("studentSif", "12345"));
+        assertThrows(BookNotFoundException.class, () -> orderServiceImpl.returnOrder("studentSif", "12345"));
     }
 
     @Test
@@ -245,7 +245,7 @@ class OrderServiceTest {
         when(bookRepository.findBookByIsbn(anyString())).thenReturn(Optional.of(book));
         when(orderRepository.findByStudentSif(anyString())).thenReturn(Collections.singletonList(order));
 
-        orderService.returnOrder("studentSif", "12345");
+        orderServiceImpl.returnOrder("studentSif", "12345");
 
         verify(orderRepository).findByStudentSif("studentSif");
         verify(bookRepository).save(book);
@@ -288,7 +288,7 @@ class OrderServiceTest {
 
         String invalidBookIsbn = "invalid-isbn";
         assertThrows(BookNotFoundException.class, () -> {
-            orderService.createOrder("studentSif", invalidBookIsbn, "2025-12-31", "Notes");
+            orderServiceImpl.createOrder("studentSif", invalidBookIsbn, "2025-12-31", "Notes");
         });
 
         verify(bookRepository).findBookByIsbn(invalidBookIsbn);

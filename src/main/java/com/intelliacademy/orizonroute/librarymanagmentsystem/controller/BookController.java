@@ -2,7 +2,9 @@ package com.intelliacademy.orizonroute.librarymanagmentsystem.controller;
 
 import com.intelliacademy.orizonroute.librarymanagmentsystem.dto.BookDTO;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.exception.BookNotFoundException;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.AuthorService;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.BookService;
+import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CategoryService;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.CategoryServiceImpl;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.CloudinaryService;
 import com.intelliacademy.orizonroute.librarymanagmentsystem.service.impl.AuthorServiceImpl;
@@ -19,8 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class BookController {
 
     private final BookService bookService;
-    private final AuthorServiceImpl authorService;
-    private final CategoryServiceImpl categoryService;
+    private final AuthorService authorService;
+    private final CategoryService categoryService;
     private final CloudinaryService cloudinaryService;
 
     @GetMapping
